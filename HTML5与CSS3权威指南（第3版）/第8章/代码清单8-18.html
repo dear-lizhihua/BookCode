@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>根据索引属性值检索数据</title>
+<script>	
+window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange|| window.webkitIDBKeyRange || window.msIDBKeyRange;
+window.IDBCursor = window.IDBCursor || window.webkitIDBCursor || window.msIDBCursor;
+var dbName = 'indexedDBTest'; //数据库名
+var dbVersion = 20150306; //版本号
+var idb; 
+function window_onload(){
+    document.getElementById("btnSaveData").disabled=true;
+    document.getElementById("btnSearchData").disabled=true;
+}
+function ConnectDataBase(){
+    /*连接数据库，dbConnect对象为一个IDBOpenDBRequest对象，代表数据库连接
+    的请求对象*/
+    var dbConnect = indexedDB.open(dbName, dbVersion);
+    dbConnect.onsuccess = function(e){//连接成功   
+        idb = e.target.result; //引用IDBDatabase对象 
+        alert('数据库连接成功');
+        document.getElementById("btnSaveData").disabled=false;
+    };
+    dbConnect.onerror = function(){
+        alert('数据库连接失败');
+    };
+}
+function SaveData(){
+    //开启事务
+    var tx = idb.transaction(['newUsers'],"readwrite"); 
+    tx.oncomplete = function(){
+        alert('保存数据成功');
+        document.getElementById("btnSearchData").disabled=false;
+    }
+    tx.onabort = function(){alert('保存数据失败'); }
+    var store = tx.objectStore('newUsers');
+    var value = {
+        userId: 1,
+        userName: '用户D',
+        address: '住址1'
+    };
+    store.put(value);
+    var value = {
+        userId: 2,
+        userName: '用户C',
+        address: '住址2'
+    };
+    store.put(value);
+    value = {
+        userId: 3,
+        userName: '用户B',
+        address: '住址3'
+    };
+    store.put(value);
+    value = {
+        userId: 4,
+        userName: '用户A',
+        address: '住址4'
+    };
+    store.put(value);
+}		
+function SearchData(){
+    //开启事务
+    var tx = idb.transaction(['newUsers'],"readonly"); 
+    var store = tx.objectStore('newUsers');
+    var idx = store.index('userNameIndex');
+    var range = IDBKeyRange.bound('用户A','用户D');
+    var direction = "next"; 
+    var req = idx.openCursor(range, direction);
+    req.onsuccess = function(){
+        var cursor = this.result;
+        if(cursor){       
+            alert('检索到一条数据,用户名为'+cursor.value.userName);     
+            cursor.continue(); //继续检索
+        }
+        else{
+            alert('检索结束');
+        }
+    }
+    req.onerror = function(){
+        alert('检索数据失败');
+    }
+}	
+</script>		
+</head>	
+<body onload="window_onload()">
+<input id="btnConnectDataBase" type="button" value="连接数据库" onclick="ConnectDataBase();"/>
+<input id="btnSaveData"  type="button" value="保存数据" onclick="SaveData();"/>
+<input id="btnSearchData" type="button" value="检索数据" onclick="SearchData();"/>
+</body>
+</html>

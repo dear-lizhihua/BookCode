@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<title>E:in-range伪类选择器与E:out-of-range伪类选择器结合使用示例</title>
+<style type="text/css">
+input[type="number"]:in-range{
+    background-color: white;
+}
+input[type="number"]:out-of-range{
+    background-color: red;
+}
+</style>
+</head>
+<body>
+<form>
+请输入1到100之内的数值：<input type=number min=0 max=100 >
+</form>
+</body>
+</html>

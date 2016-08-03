@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>	
+<title>修改Web Storage中的数据</title>
+<script>	
+function setLocalStorage(){
+    localStorage.test=document.getElementById("text1").value;
+} 
+</script>	
+</head>	
+<body>		
+请输入一些值:<input type="text" id="text1"/>
+<button onClick="setLocalStorage()">设置</button> 
+</body>
+</html>

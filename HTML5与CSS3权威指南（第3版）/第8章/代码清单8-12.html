@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>更新数据库的版本</title>
+<script>	
+window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange|| window.webkitIDBKeyRange || window.msIDBKeyRange;
+window.IDBCursor = window.IDBCursor || window.webkitIDBCursor || window.msIDBCursor;		
+function VersionUpdate(){
+    var dbName = 'indexedDBTest'; //数据库名
+    var dbVersion = 20150304; //版本号
+    var idb; 
+    /*连接数据库，dbConnect对象为一个IDBOpenDBRequest对象，代表数据库连接
+的请求对象*/
+    var dbConnect = indexedDB.open(dbName, dbVersion); 
+    dbConnect.onsuccess = function(e){//连接成功
+        //e.target.result为一个IDBDatabase对象，代表连接成功的数据库对象
+        idb = e.target.result; 
+        alert('数据库连接成功');
+    };
+    dbConnect.onerror = function(){
+        alert('数据库连接失败');
+    };	
+    dbConnect.onupgradeneeded = function(e){
+        //数据库版本更新
+        //e.target.result为一个IDBDatabase对象，代表连接成功的数据库对象
+        idb = e.target.result; 
+        /*e.target.transaction属性值为一个IDBTransaction事务对象，此处代表
+        版本更新事务*/
+        var tx = e.target.transaction;
+        var oldVersion = e.oldVersion; //更新前的版本号
+        var newVersion = e.newVersion; //更新前的版本号
+        alert('数据库版本更新成功,旧的版本号为'+oldVersion+',新的版本号为'+newVersion);    
+        /*
+        * 此处可执行创建对象仓库等处理
+        */
+    };
+}	
+</script>		
+</head>	
+<body>						
+<input type="button" value="数据库版本更新" onclick="VersionUpdate();"/>
+</body>
+</html>

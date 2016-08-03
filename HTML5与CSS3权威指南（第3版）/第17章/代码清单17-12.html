@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>依序读取三个文件</title>
+</head>
+<script language=javascript>
+function CreateXMLHTTP() {
+    if (window.ActiveXObject) {
+        var objXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } 
+    else {
+        if (window.XMLHttpRequest) {
+            var objXmlHttp = new XMLHttpRequest();
+        }
+        else {
+            alert("Can't intialize XMLHTTP object！");
+        }
+    }
+    return objXmlHttp;
+} 
+function getData(fileName){   
+    return new Promise(function(resolve, reject) { 
+        var objXmlHttp=CreateXMLHTTP();           
+        objXmlHttp.open("GET",fileName, true); 
+        objXmlHttp.onreadystatechange = function() { 
+            if (objXmlHttp.readyState == 4) { 
+                if (objXmlHttp.status == 200){ 
+                    allData+=objXmlHttp.responseText+"<br/>";
+                    resolve();
+                }
+                else{
+                    alert("读取文件失败");
+                }
+            }
+        }
+        objXmlHttp.send();
+    });
+}
+function read()
+{
+    allData="";
+    getData("1.txt").then(function(){
+        return getData("2.txt");
+    }).then(function(){
+        return getData("3.txt");
+    }).then(function(){
+        var result=document.getElementById("result");
+        result.innerHTML=allData;
+    });
+}
+</script>
+<input type="button" value="读取文件" onclick="read()"/>
+<div name="result" id="result" style="white-space:pre">
+      <!-- 这里用来显示读取结果 -->
+</div>  
+</body> 
+</html>

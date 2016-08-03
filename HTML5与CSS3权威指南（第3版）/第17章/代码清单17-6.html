@@ -1,0 +1,29 @@
+﻿<!doctype html>
+<html>
+<head>
+<title>观察元素的属性改变</title>
+</head>
+<body>
+<a id="a1" href="#a">测试链接1</a>
+<a id="a2" href="#b">测试链接2</a>
+<input type="button" value="修改a元素" onclick="changeA();">
+<script type="text/javascript">
+function onchange(mutationRecords,mutationObserver) {
+    for(var i=0;i<mutationRecords.length;i++)
+        console.log("修改前的"+mutationRecords[i].attributeName+"属性为："+mutationRecords[i].oldValue);
+}
+var a1El = document.getElementById('a1');
+var a2El = document.getElementById('a2');
+var attr= ["href"];
+var mo = new window.MutationObserver(onchange),
+options = {attributes: true,attributeFilter: attr,attributeOldValue:true};
+mo.observe(a1El,options);
+mo.observe(a2El,options);
+function changeA()
+{    
+    a1El.setAttribute("href","http://www.html5online.com.cn");
+    a2El.setAttribute("href","http://www.html5online.com.cn");
+}
+</script>
+</body>
+</html>

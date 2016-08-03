@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>创建并使用复合索引</title>
+<script>	
+window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange|| window.webkitIDBKeyRange || window.msIDBKeyRange;
+window.IDBCursor = window.IDBCursor || window.webkitIDBCursor || window.msIDBCursor;
+var dbName = 'indexedDBTest'; //数据库名
+var dbVersion = 20150307; //版本号
+var idb; 
+function window_onload(){
+    document.getElementById("btnSaveData").disabled=true;
+    document.getElementById("btnGetData").disabled=true;
+}
+function ConnectDataBase(){
+    /*连接数据库，dbConnect对象为一个IDBOpenDBRequest对象，代表数据库连接
+    的请求对象*/
+    var dbConnect = indexedDB.open(dbName, dbVersion);
+    dbConnect.onsuccess = function(e){//连接成功   
+        idb = e.target.result; //引用IDBDatabase对象 
+        alert('数据库连接成功');
+        document.getElementById("btnSaveData").disabled=false;
+    };
+    dbConnect.onerror = function(){
+        alert('数据库连接失败');
+    };
+    dbConnect.onupgradeneeded = function(e){
+        //数据库版本更新
+        //e.target.result为一个IDBDatabase对象，代表连接成功的数据库对象
+        idb = e.target.result; 
+        /*e.target.transaction属性值为一个IDBTransaction事务对象，此处代表
+        版本更新事务*/
+        var tx = e.target.transaction;
+        var name = 'Users2';
+        var optionalParameters = {
+            keyPath: 'userId',
+            autoIncrement: false
+        };
+        var store = idb.createObjectStore(name,  optionalParameters);
+        alert('对象仓库创建成功');
+        var name =  'userNameAddressIndex';
+        var keyPath = ['userName','address'];
+        var optionalParameters = {
+            unique: false,
+            multiEntry: false 
+        };
+ 
+        var idx = store.createIndex(name, keyPath, optionalParameters);
+        alert('索引创建成功');
+    };
+}
+function SaveData(){
+    //开启事务
+    var tx = idb.transaction(['Users2'],"readwrite"); 
+    tx.oncomplete = function(){
+        alert('保存数据成功');
+        document.getElementById("btnGetData").disabled=false;
+    }
+    tx.onabort = function(){alert('保存数据失败'); }
+    var store = tx.objectStore('Users2');
+    var value = {
+        userId: 1,
+        userName: '张三',
+        address: '住址1'
+    };
+    store.put(value);
+    var value = {
+        userId: 2,
+        userName: '李四',
+        address: '住址2'
+    };
+    store.put(value);
+    value = {
+        userId: 3,
+        userName: '王五',
+        address: '住址3'
+    };
+    store.put(value);
+    value = {
+        userId: 4,
+        userName: '赵六',
+        address: '住址4'
+    };
+    store.put(value);
+}		
+function GetData(){
+    //开启事务
+    var tx = idb.transaction(['Users2'],"readonly");
+    var store = tx.objectStore('Users2');
+    var idx = store.index('userNameAddressIndex');
+ 
+    var req = idx.get(['赵六','住址4']);
+    req.onsuccess = function(){
+        if(this.result ==undefined){
+            alert("没有符合条件的数据");
+        }
+        else{
+            alert("获取数据成功,主键值为"+this.result.userId);
+        }
+    }
+    req.onerror = function(){
+        alert("获取数据失败");
+    }
+}	
+</script>		
+</head>	
+<body onload="window_onload()">
+<input id="btnConnectDataBase" type="button" value="连接数据库" onclick="ConnectDataBase();"/>
+<input id="btnSaveData"  type="button" value="保存数据" onclick="SaveData();"/>
+<input id="btnGetData" type="button" value="获取数据" onclick="GetData();"/>
+</body>
+</html>

@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<title>对图片使用滤镜特效</title>
+<style>
+div{
+    display:flex;
+    flex-direction:row;
+}
+figure{
+    width:50%;
+    text-align:center;    
+}
+figure:nth-child(2){
+    filter:opacity(50%);
+    -webkit-filter:opacity(50%);
+}
+</style>
+</head>
+<body>
+<div>
+<figure>
+<img src="sl.jpg">
+<figcaption>原始图片</figcaption>
+</figure>
+<figure>
+<img src="sl.jpg">
+<figcaption>使用透明度滤镜</figcaption>
+</figure>
+</div>
+</body>
+</html>

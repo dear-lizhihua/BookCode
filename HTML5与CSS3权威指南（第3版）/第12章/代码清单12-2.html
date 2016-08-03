@@ -1,0 +1,35 @@
+﻿<!doctype html>
+<html>
+<head>
+<title>对视频信息实现拍照功能</title>
+</head>
+<body>
+    <video id="myVideo" width="400" height="300" autoplay></video>
+    <img src="" id="img" ></img>
+    <canvas width="400" height="300" style="display:none;" id="canvas" ></canvas>
+    <script type="text/javascript">
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+    window.URL = window.URL || window.webkitURL;
+ 
+    var video = document.getElementById('myVideo');
+    video.addEventListener('click', snapshot, false);
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var localMediaStream = null;
+    navigator.getUserMedia({video:true, audio:false}, 
+    function(stream) { 
+        video.src = window.URL.createObjectURL(stream);
+        localMediaStream = stream;
+    },
+    function(err) {
+        console.log(err);
+     });
+     function snapshot() {
+         if (localMediaStream) {
+             ctx.drawImage(video, 0, 0);
+             document.getElementById('img').src = canvas.toDataURL('image/png');
+         }
+     }
+   </script>
+ </body>
+</html>

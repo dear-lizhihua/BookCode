@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>在浏览器之间发送文件</title>
+<script src="http://www.html5online.com.cn:8080/socket.io/socket.io.js"></script>
+</head>
+<body>
+<article>
+<h1>在浏览器之间发送文件</h1>
+<input type="button" value="连接对方" onclick="connect()"></input>
+<input type="file"></input>
+<script>
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+window.URL = window.URL || window.webkitURL;
+if (navigator.mozGetUserMedia) {
+    RTCPeerConnection = mozRTCPeerConnection;
+    RTCSessionDescription = mozRTCSessionDescription;
+    RTCIceCandidate =mozRTCIceCandidate;
+}
+else if (navigator.webkitGetUserMedia) {
+    RTCPeerConnection = webkitRTCPeerConnection;
+}
+else {
+    alert("您的浏览器不支持WebRTC通信");
+}
+var chunkLength = 1000;
+var arrayToStoreChunks = [];
+var dataChannel,peerConnection;
+
+var optionalRtpDataChannels = {
+    optional: [{
+        RtpDataChannels: true
+    }]
+};
+var port = 8080;
+var socket = io.connect('http://www.html5online.com.cn:' + port + '/');
+var pc_config = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+socket.on('message', onMessage);
+
+function sendSDP(sdp) {   
+    socket.json.send(sdp);
+}
+function onMessage(evt) {
+    if (evt.type === 'offer') 
+        createAnswer(evt);      
+    else if (evt.type === 'answer') 
+        peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
+    else if (evt.type === 'candidate') 
+      onCandidate(evt);
+}
+function sendCandidate(candidate) {
+    socket.json.send(candidate);
+}
+function onCandidate(evt) {
+    var candidate = new RTCIceCandidate({sdpMLineIndex:evt.sdpMLineIndex,candidate:evt.candidate});
+    peerConnection.addIceCandidate(candidate);
+}
+var mediaConstraints = {
+    mandatory: {
+        OfferToReceiveAudio: false, 
+        OfferToReceiveVideo: false 
+    }
+};
+function connect() {
+    peerConnection = new RTCPeerConnection(pc_config, optionalRtpDataChannels);
+    dataChannel = peerConnection.createDataChannel('datachannel', {
+        reliable: false
+    });
+    setChannelEvents(dataChannel);
+    peerConnection.onicecandidate = function (event) {
+        if (!event || !event.candidate) return;
+        sendCandidate({type: "candidate", 
+                          sdpMLineIndex: event.candidate.sdpMLineIndex,
+                          candidate:event.candidate.candidate});
+        
+    };
+    
+    peerConnection.createOffer(function (sessionDescription) {
+        peerConnection.setLocalDescription(sessionDescription);
+        sendSDP(sessionDescription);
+    }, null, mediaConstraints);
+}
+function setChannelEvents(channel) {
+   channel.onmessage = function (event) {
+         var data = JSON.parse(event.data);
+         arrayToStoreChunks.push(data.message); 
+
+        if (data.last) {
+            saveToDisk(arrayToStoreChunks.join(''),data.fileName);
+            arrayToStoreChunks = []; //重置数组
+        }
+    };
+}
+function saveToDisk(fileUrl, fileName) {
+    var save = document.createElement('a');
+    save.href = fileUrl;
+    save.target = '_blank';
+    save.download = fileName || fileUrl;
+    var evt = document.createEvent("MouseEvents");  
+    evt.initEvent("click",true,true);  
+    save.dispatchEvent(evt); 
+    window.URL.revokeObjectURL(save.href);
+}
+var fileName;
+document.querySelector('input[type=file]').onchange = function() {
+    var file = this.files[0];
+    fileName=file.name;
+    var reader = new window.FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = onReadAsDataURL;
+
+};
+
+function onReadAsDataURL(event, text) {
+    var data = {}; 
+
+    if (event) text = event.target.result; //首次调用时
+    if (text.length > chunkLength) {
+        data.message = text.slice(0, chunkLength); //使用预定义分块尺寸获取文件分块
+    } else {
+        data.message = text;
+        data.last = true;
+        data.fileName=fileName;
+    }
+
+    dataChannel.send(JSON.stringify(data)); 
+
+    var remainingDataURL = text.slice(data.message.length);
+    if (remainingDataURL.length) 
+    setTimeout(function () {
+        onReadAsDataURL(null, remainingDataURL); //继续发送
+    }, 500)
+}
+function createAnswer(offerSDP) {
+    peerConnection = new RTCPeerConnection(pc_config, optionalRtpDataChannels);
+    dataChannel = peerConnection.createDataChannel('datachannel', {
+        reliable: false
+    });
+    setChannelEvents(dataChannel);
+    peerConnection.onicecandidate = function (event) {
+        if (!event || !event.candidate) return;        
+        sendCandidate({type: "candidate", 
+                          sdpMLineIndex: event.candidate.sdpMLineIndex,
+                          candidate: event.candidate.candidate});
+    };
+    peerConnection.setRemoteDescription(new RTCSessionDescription(offerSDP));
+    peerConnection.createAnswer(function (sessionDescription) {
+        peerConnection.setLocalDescription(sessionDescription);
+        sendSDP(sessionDescription);
+    }, null, mediaConstraints);
+}
+</script>
+</body>
+</html>

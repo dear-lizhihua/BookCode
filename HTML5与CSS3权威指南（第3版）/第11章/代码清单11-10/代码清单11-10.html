@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>查看客户端与服务器端之间的连接动态</title>
+<script type="text/javascript">
+if(typeof(EventSource)!=="undefined")
+{
+    var source=new EventSource("test.php");
+    source.onmessage=function(event)
+    {
+        document.getElementById("result").innerHTML+=event.data + "<br />";
+    };
+    source.onopen =connectionOpen;
+    source.onerror=connectionClose;
+}
+else
+{
+    document.getElementById("result").innerHTML="对不起,您的浏览器不支持Server-Sent Events API!";
+}
+function connectionOpen()
+{
+    if(source.readyState==0)
+        document.getElementById("result").innerHTML+="连接已断开" + "<br />";
+    if(source.readyState==1)
+        document.getElementById("result").innerHTML+="连接成功" + "<br />";
+}
+function closeConnection(){
+    source.close();
+    document.getElementById("result").innerHTML+="客户端主动关闭与服务器端之间的连接" + "<br />";
+}
+function connectionClose(){
+    document.getElementById("result").innerHTML+="断开连接" + "<br />";
+}
+</script>
+</head>
+<body>
+<h1>查看客户端与服务器端之间的连接动态</h1>
+<button onclick="closeConnection()">断开连接</button>
+<div id="result"></div>
+</body>
+</html>
+

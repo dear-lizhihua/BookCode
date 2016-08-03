@@ -1,0 +1,27 @@
+﻿<!doctype html>
+<html>
+<head>
+<title>MutationObserver对象使用示例</title>
+</head>
+<body>
+<div id="div" style="height: 100px;width:100%;background-color:pink;"></div>
+<input type="button" value="插入span元素" onclick="changeDiv();">
+<script type="text/javascript">
+function onchange(mutationRecords,mutationObserver) {
+	alert("检测到DOM变化");
+	console.log(mutationRecords);
+	console.log(mutationObserver);
+}
+var div = document.getElementById('div');
+var mo = new window.MutationObserver(onchange),
+options = {childList:true};
+mo.observe(div,options);
+function changeDiv()
+{    
+    var span=document.createElement("span");
+    span.innerHTML="我是一个span元素";
+    div.appendChild(span);
+}
+</script>
+</body>
+</html>

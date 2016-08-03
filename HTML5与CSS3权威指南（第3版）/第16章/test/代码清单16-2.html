@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>通知API的代码使用示例</title>
+<script>
+function createNotificationInstance(options) {
+    if (options.notificationType == 'simple') {        
+        return window.webkitNotifications.createNotification('downArrow.gif', '通知标题', '通知内容');
+    } 
+    else if (options.notificationType == 'html') {
+        return window.webkitNotifications.createHTMLNotification('http://localhost/test/代码清单17-2.html');
+    }
+}
+function NotificationTest(){
+    //0代表已获得权限
+    if (window.webkitNotifications.checkPermission() == 0) { 
+        var Notification=createNotificationInstance({ notificationType: 'simple' });
+        Notification.ondisplay = function() {alert('通知被显示');};
+        Notification.onclose = function() {alert('通知被关闭');};
+        Notification.show();
+    } 
+    else {
+        window.webkitNotifications.requestPermission();
+    }
+}
+</script>
+</head>
+<body>
+<button onclick="NotificationTest()">显示通知</button>
+</body>
+</html>

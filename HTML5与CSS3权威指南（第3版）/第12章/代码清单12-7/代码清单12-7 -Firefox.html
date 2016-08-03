@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>实现RTCDataChannel通信</title>  
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1" />
+<script src="http://www.html5online.com.cn:8080/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <article>        
+        <h1>实现RTCDataChannel通信</h1>
+        <input type="button" value="连接其他人" onclick="connect()"></input>
+        <table>
+            <tr>
+                <td>
+                    <input id="from-first-peer" type="text" placeholder="Offerer" style="display:none">
+                    <ol id="messages-sent-by-second-peer" style="display:none">
+                    </ol>
+                </td>
+                <td>
+                    <input id="from-second-peer" type="text" placeholder="Answerer" style="display:none">
+                    <ol id="messages-sent-by-first-peer"  style="display:none">
+                    </ol>
+                </td>
+            </tr>
+        </table>
+    </article>       
+<script>
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+window.URL = window.URL || window.webkitURL;
+if (navigator.mozGetUserMedia) {
+    RTCPeerConnection = mozRTCPeerConnection;
+    RTCSessionDescription = mozRTCSessionDescription;
+    RTCIceCandidate =mozRTCIceCandidate;
+}
+else if (navigator.webkitGetUserMedia) {
+    RTCPeerConnection = webkitRTCPeerConnection;
+}
+else {
+    alert("您的浏览器不支持WebRTC通信");
+}
+var dataChannel,peerConnection;
+var firstPeerTextBox = document.getElementById('from-first-peer');
+var secondPeerTextBox = document.getElementById('from-second-peer');
+var firstPeerOutput = document.getElementById('messages-sent-by-second-peer');
+var secondPeerOutput = document.getElementById('messages-sent-by-first-peer');
+var optionalRtpDataChannels = {
+    optional: [{
+        RtpDataChannels: true
+    }]
+};
+var port = 8080;
+var socket = io.connect('http://www.html5online.com.cn:' + port + '/');
+var pc_config = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+socket.on('connect', onOpened).on('message', onMessage);
+var iceServers = {
+    iceServers: [{
+        url: 'stun:stun.l.google.com:19302'
+    }]
+};
+function onOpened(evt) {
+    console.log('已建立socket连接');
+}
+function sendSDP(sdp) {    
+    //通过socket发送
+    socket.json.send(sdp);
+}
+function sendCandidate(candidate) {
+    var text = JSON.stringify(candidate);
+    console.log(text);
+    
+    //通过socket发送
+    socket.json.send(candidate);
+}
+function onCandidate(evt) {
+    var candidate = new RTCIceCandidate({sdpMLineIndex:evt.sdpMLineIndex,candidate:evt.candidate});
+    console.log("接收到候选者...")
+    console.log(candidate);
+    peerConnection.addIceCandidate(candidate);
+}
+//接收消息
+function onMessage(evt) {
+    if (evt.type === 'offer') {
+        console.log("接收到offer,设置offer,发送answer....")
+        onOffer(evt);      
+    } else if (evt.type === 'answer') {
+        console.log('接收到answer,设置answer SDP');
+        peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
+    } else if (evt.type === 'candidate') {
+        console.log('接收到ICE候选者...');
+        onCandidate(evt);
+    }
+    else{
+        alert("接收到消息");
+    }
+}
+function onOffer(evt) {
+    createAnswer(evt);  
+}
+var mediaConstraints = {
+    mandatory: {
+        OfferToReceiveAudio: false, 
+        OfferToReceiveVideo: false 
+    }
+};
+
+function connect() {
+    peerConnection = new RTCPeerConnection(pc_config, optionalRtpDataChannels);
+    peerConnection.onicecandidate = function (event) {
+        if (!event || !event.candidate) return;
+        sendCandidate({type: "candidate", 
+                       sdpMLineIndex: event.candidate.sdpMLineIndex,
+                       candidate:event.candidate.candidate});
+        
+    };
+    peerConnection.ondatachannel=function(e){
+        setChannelEvents(e.channel, 'offerer');
+    };
+    peerConnection.onconnection=function(){
+        socket.json.send({askToCreateDataChannel:true});
+    };
+    navigator.getUserMedia({
+        audio: true,
+        fake: true
+    }, function (stream) {
+        peerConnection.addStream(stream);
+        dataChannel = peerConnection.createDataChannel('dataChannel', {
+            reliable: false
+        });
+        setChannelEvents(dataChannel, 'offerer');
+        peerConnection.createOffer(function (sessionDescription) {
+            peerConnection.setLocalDescription(sessionDescription);
+            sendSDP(sessionDescription);
+        }, function () { 
+            console.log("创建Offer失败");
+        }, mediaConstraints);
+    }, function(error) {} );    
+}
+function setChannelEvents(channel, channelNameForConsoleOutput) {
+    channel.onmessage = function (event) {
+        console.log("RTCDataChannel.stream");
+        console.log(channel.stream);
+        console.debug(channelNameForConsoleOutput, '接收到一个消息:', event.data);
+        if (channelNameForConsoleOutput == 'offerer'){
+            var li = document.createElement('li');
+            li.innerHTML = event.data;
+            firstPeerOutput.insertBefore(li, firstPeerOutput.firstChild);
+            firstPeerOutput.style.display="block";
+            firstPeerTextBox.style.display="inline-block";
+        }
+        else{
+            var li = document.createElement('li');
+            li.innerHTML = event.data;
+            secondPeerOutput.insertBefore(li, secondPeerOutput.firstChild);
+            secondPeerOutput.style.display="block";
+            secondPeerTextBox.style.display="inline-block";
+        }
+    };
+    channel.onopen = function () {
+        channel.send('第一条默认消息');
+    };
+}
+firstPeerTextBox.onchange = function () {
+    dataChannel.send(this.value);
+    this.value = '';
+};
+secondPeerTextBox.onchange = function () {
+    dataChannel.send(this.value);
+    this.value = '';
+};
+function createAnswer(offerSDP) {
+    peerConnection = new RTCPeerConnection(pc_config, optionalRtpDataChannels);
+    peerConnection.ondatachannel=function(e){
+        dataChannel=e.channel;
+        setChannelEvents(e.channel, 'answerer');
+    };
+    peerConnection.onicecandidate = function (event) {
+        if (!event || !event.candidate) return;        
+        sendCandidate({type: "candidate", 
+                       sdpMLineIndex: event.candidate.sdpMLineIndex,
+                       candidate: event.candidate.candidate});
+    };
+    navigator.getUserMedia({
+        audio: true,
+        fake: true
+    }, function (stream) {
+        peerConnection.addStream(stream);
+        peerConnection.setRemoteDescription(new RTCSessionDescription(offerSDP));
+        peerConnection.createAnswer(function (sessionDescription) {
+            peerConnection.setLocalDescription(sessionDescription);
+            sendSDP(sessionDescription);
+        }, function () { 
+            console.log("创建Answer失败");
+        }, mediaConstraints);
+    }, function(error) {});
+}
+</script>
+</body>
+</html>

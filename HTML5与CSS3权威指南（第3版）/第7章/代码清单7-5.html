@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>结合使用Canvas API与History API</title>		
+<style>														
+#canvas {				    
+    position: absolute;				
+    top: 0;				
+    left: 0;		    
+    width: 100%;				
+    height: 100%;				
+    margin: 0;		
+    display: block;			
+}		
+</style>	
+</head>	
+<body>						
+<canvas id="canvas" width="400" height="300"></canvas>	
+<image id="image" src="brush.png" style="display:none;"/>	
+<script>    
+var image = document.getElementById("image");				
+var canvas = document.getElementById("canvas");				
+var context = canvas.getContext("2d");				
+var isDrawing =false;								
+var state = context.getImageData(0, 0, canvas.width, canvas.height);					        
+history.pushState(state,null); 	        
+canvas.addEventListener("pointerdown", function(e){e.preventManipulation()}, false);					canvas.addEventListener("mousedown",startDrawing, false);					                      canvas.addEventListener("mousemove", draw,false);					
+canvas.addEventListener("mouseup", stopDrawing, false); 
+window.addEventListener("popstate",function(e){
+        loadState(e.state);
+}); 	                    		    
+function startDrawing() {					
+    isDrawing = true;			    
+}								
+function draw(event) {					        
+    if(isDrawing) {						
+        var sx = canvas.width / canvas.offsetWidth;				            
+        var sy = canvas.height / canvas.offsetHeight;						
+        var x = sx * event.clientX - image.naturalWidth / 2;						
+        var y = sy * event.clientY - image.naturalHeight / 2;						                              context.drawImage(image, x, y);				        
+    }				
+}								
+function stopDrawing() {	
+    isDrawing = false;					        
+    var state = context.getImageData(0, 0, canvas.width, canvas.height);					        
+    history.pushState(state,null);       			    
+}								
+function loadState(state) {	
+   context.clearRect(0, 0, canvas.width,canvas.height);
+   if(state){           
+       context.putImageData(state, 0, 0);
+   }				
+}								    
+</script>
+</body>
+</html>

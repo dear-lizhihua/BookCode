@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<head>
+<title>labels属性的使用示例</title>
+<meta charset="UTF-8">
+</head>
+<script type="text/javascript">
+function Validate(){
+    var txtName=document.getElementById("txt_name"); 
+    var button=document.getElementById("btnValidate");
+    var form=document.getElementById("testform");
+    if(txtName.value.trim()==""){
+        if(txtName.labels.length==1)
+        {
+            var label=document.createElement("label");
+            label.setAttribute("for","txt_name");
+            form.insertBefore(label,button); 
+            txtName.labels[1].innerHTML="请输入姓名";
+            txtName.labels[1].setAttribute(
+            "style","font-size:9px;color:red");
+        }       
+   }
+   else if(txtName.labels.length>1)
+       form.removeChild(txtName.labels[1]);
+}
+</script>
+<form  id="testform">
+<label id="label" for="txt_name">姓名:</label>
+<input id="txt_name">
+<input type="button" id="btnValidate" value="验证"  onclick="Validate()"/>
+</form>

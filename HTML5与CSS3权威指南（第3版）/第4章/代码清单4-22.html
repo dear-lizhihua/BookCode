@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html> 
+<head>
+<meta charset="UTF-8">
+<title>details元素使用示例</title>
+<script>
+function detail_ontoggle(detail){
+    var p=document.getElementById('p');
+    if(detail.open)
+        p.style.visibility="visible";
+    else
+        p.style.visibility="hidden";
+}
+</script>
+<details id="detail1" ontoggle="detail_ontoggle(this)" 
+style="cursor:pointer">
+    <summary>精武风云<summary>
+    <p id="p" style="visibility:hidden"/>陈真（甄子丹 饰）当年为报杀师之仇，独闯
+    虹口道场...(精武风云电影介绍）</p>
+</details>
+
+

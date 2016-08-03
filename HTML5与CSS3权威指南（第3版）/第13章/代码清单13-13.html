@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>下载ArrayBuffer对象</title>
+<script>    
+function getArrayBuffer(){    
+    var check=document.getElementsByName("check");
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'getData.php', true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function(e) {
+        if (this.status == 200) {            
+            var bytearray = new Int8Array(this.response);
+            for(var i=3;i<bytearray.byteLength;i++)
+            {
+                check[bytearray[i]].checked=true;
+            }
+        }
+    };
+    xhr.send();
+}							    
+</script>		
+</head>	
+<body>	
+<input type="button" onclick="getArrayBuffer()" value="下载"/><br/>
+<input type="checkbox" name="check"/>数据1<br/>	
+<input type="checkbox" name="check"/>数据2<br/>
+<input type="checkbox" name="check"/>数据3<br/>
+<input type="checkbox" name="check"/>数据4<br/>
+<input type="checkbox" name="check"/>数据5<br/>
+<input type="checkbox" name="check"/>数据6<br/>
+<input type="checkbox" name="check"/>数据7<br/>
+<input type="checkbox" name="check"/>数据8<br/>
+<input type="checkbox" name="check"/>数据9<br/>
+<input type="checkbox" name="check"/>数据10
+</body>
+</html>
+

@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>通道通信示例</title>
+<script type="text/javascript">
+function window_onload(){
+    var iframes, messageHandler;
+    iframes = window.frames;
+    //定义接收到消息时的事件处理函数中的内容
+    messageHandler = function(messageEvent){
+        if( messageEvent.ports.length > 0 ){
+            //将端口转发给第二个iframe元素中的页面
+            iframes[1].postMessage(messageEvent.data,'http://localhost/test2/代码清单11-5.html',messageEvent.ports);
+        }
+    }
+
+    //开始对第一个iframe元素中的页面进行监听
+    window.addEventListener('message',messageHandler,false);
+}
+</script>
+</head>
+<body onload="window_onload()">
+<h1>通道通信示例</h1>
+<iframe style="display:none" src="http://localhost/test1/代码清单11-3.html">
+</iframe>
+<iframe style="display:none" src="http://localhost/test2/代码清单11-5.html">
+</iframe>
+</body>
+</html>
+
+

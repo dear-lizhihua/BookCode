@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<title>calc方法的使用示例</title>
+<style type="text/css">
+#container{
+    width:500px;
+    background-color:pink;
+}
+#foo {
+    width: calc(50% - 100px); 
+    background-color:green;
+}
+</style>
+<script>
+function changeWidth(){
+    document.getElementById("container").style.width="1000px";
+}
+</script>
+</head>
+<body>
+<div id="container">
+<div id="foo">示例Div</div>
+</div><br/>
+<input type="button" value="修改div宽度" onclick="changeWidth();" />
+</body>
+</html>

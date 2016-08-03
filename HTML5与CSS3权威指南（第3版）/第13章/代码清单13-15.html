@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html> 
+<html>   
+<head>     
+<meta charset="utf-8">
+<title>跨域数据请求</title>
+<script type="text/javascript">
+function AjaxRequest(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://localhost/test1/cors.php', true);
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === 4) {
+            document.getElementById("result").innerHTML = xhr.responseText;
+        }
+    };
+    xhr.send(null);
+}
+</script>
+</head>
+<body>
+<input type="button" value="跨域数据请求" onclick="AjaxRequest()"></input><br/>
+服务器端响应数据为：<output id="result"/>
+</body>
+</html>

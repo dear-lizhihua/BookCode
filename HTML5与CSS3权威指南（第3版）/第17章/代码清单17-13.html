@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>创建Promise对象序列</title>
+</head>
+<script language=javascript>
+var result=document.getElementById("result");
+var file=document.getElementById("file");
+var allData="";
+function getData(file){ 
+    return new Promise(function(resolve, reject) {  
+        var reader = new FileReader();
+        //将文件以文本形式进行读入页面
+        reader.readAsText(file);
+        reader.onload = function(f)
+        {
+            allData+=this.result+"<br/>";
+            resolve();
+        }
+        reader.onerror=function(){
+            reject();
+        }
+    });
+}
+function get(file){
+    return getData(file).catch(function(err){        
+        alert("读取文件失败");
+        throw err;
+    });
+}
+function getSequence(){
+    var files=[];
+    for(var i=0;i<document.getElementById("file").files.length;i++){
+        files.push(document.getElementById("file").files[i]);
+    }
+    var sequence=Promise.resolve();
+    files.forEach(function(file){
+        sequence = sequence.then(function() {
+            return get(file);
+        });
+    });
+    return sequence;
+}
+//将文件以文本形式进行读入页面
+function read()
+{
+    Promise.resolve().then(function(){
+        return getSequence();
+    }).then(function(){
+        var result=document.getElementById("result");
+        result.innerHTML=allData;
+    }).catch(function(){
+        console.log("读取文件发生错误");
+    });
+}
+</script>
+<p>
+    <div id="divTip"></div>
+    <label>请选择一个文件：</label>
+    <input type="file" id="file" multiple />
+    <input type="button" value="读取文件" onclick="read()"/>
+</p> 
+<div name="result" id="result"  style="white-space:pre">
+      <!-- 这里用来显示读取结果 -->
+</div>  
+</body> 
+</html>

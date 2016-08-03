@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<title> E:required伪类选择器与E:optional伪类选择器结合使用示例</title>
+<style type="text/css">
+input[type="text"]:required{
+    border-color: red;
+    border-width:3px;
+}
+input[type="text"]:optional{
+    border-color: black;
+    border-width:1px;
+}
+</style>
+</head>
+<body>
+<form>
+姓名：<input type="text" required placeholder="必须输入姓名"/><br/>
+住址：<input type="text"/>
+</form>
+</body>
+</html>

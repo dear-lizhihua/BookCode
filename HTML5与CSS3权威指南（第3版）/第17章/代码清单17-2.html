@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>Fullscreen API代码使用示例</title>
+<style type="text/css">
+html:-moz-full-screen {
+    background: red;
+}
+html:-webkit-full-screen {
+    background: red;
+}
+html:fullscreen {
+    background: red;
+}
+</style>
+</head>
+<body>
+    <input type="button" id="btnFullScreen" value="页面全屏显示" onclick="toggleFullScreen();">
+    <div style="width:100%;" id="fullscreenState">非全屏显示</div>
+</body>
+<script type="text/javascript">
+var docElm = document.documentElement;
+var fullscreenState=document.getElementById("fullscreenState");
+var btnFullScreen=document.getElementById("btnFullScreen");
+fullscreenState.style.height=docElm.clientHeight+"px";
+document.addEventListener("fullscreenchange", function () {    
+    fullscreenState.innerHTML =(document.fullscreen) ? "全屏显示" : "非全屏显示";
+    btnFullScreen.value=(document.fullscreen) ? "页面非全屏显示": "页面全屏显示";
+}, false);
+document.addEventListener("mozfullscreenchange", function () {
+    fullscreenState.innerHTML =(document.mozFullScreen) ? "全屏显示" : "非全屏显示";
+    btnFullScreen.value=(document.mozFullScreen) ? "页面非全屏显示": "页面全屏显示";
+}, false);
+document.addEventListener("webkitfullscreenchange", function () {
+    fullscreenState.innerHTML =(document.webkitIsFullScreen) ? "全屏显示" : "非全屏显示";
+    btnFullScreen.value=(document.webkitIsFullScreen) ? "页面非全屏显示": "页面全屏显示";
+}, false);
+function toggleFullScreen()
+{    
+    if(btnFullScreen.value=="页面全屏显示")
+    {
+        if (docElm.requestFullscreen) {
+            docElm.requestFullscreen();
+        }
+        else if (docElm.mozRequestFullScreen) {
+            docElm.mozRequestFullScreen();
+        }
+        else if (docElm.webkitRequestFullScreen) {
+            docElm.webkitRequestFullScreen();
+        }
+    }
+    else
+    {            
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        //如果当前浏览器为Firefox浏览器
+        else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        }
+        //如果当前浏览器为Chrome浏览器、Opera浏览器或Safari浏览器
+        else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }  
+    }
+}
+</script>
+</html>

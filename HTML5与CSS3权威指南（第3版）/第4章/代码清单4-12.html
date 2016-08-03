@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>  
+<head>    
+<meta charset="UTF-8">    
+<title>valueAsDate属性使用示例</title>  
+</head>  
+<body>    
+<form>      
+<input type="date" id="date">      
+<input type="button" value="点击我！" onclick="alert(document.getElementById('date').valueAsNumber)">      
+<script>
+//将datetime元素的valueAsDate属性值设定为当前日期和时间  
+document.getElementById('date').valueAsDate = new Date();      
+</script>    
+</form>  
+</body>
+</html>

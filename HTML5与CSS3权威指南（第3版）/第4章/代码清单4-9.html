@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>  
+<head>    
+<meta charset="UTF-8">    
+<title>selectionDirection属性使用示例</title> 
+<script>
+function AlertSelectionDirection()
+{
+    var control=document.forms[0]['text']; 
+    var Direction = control.selectionDirection;
+    alert(Direction);
+}    
+</script>  
+</head>  
+<body>    
+<form>      
+<input type="test" name="text"> 
+<input type="button" value="点击我" onclick="AlertSelectionDirection()">      
+</form>  
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>使用scale3d方法缩小元素</title>
+<style type="text/css">
+div{
+    width: 300px;
+    height:300px;
+    transform: scale3d(0.8, 0.5, 1);
+    transform: matrix3d(0.8, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    transform: matrix(1.0606, 1.0606, -1.0606, 1.0606, 0, 1);
+    background-color: blue;
+}
+</style>
+</head>
+<body>
+<div id="div"></div>
+</body>
+</html>

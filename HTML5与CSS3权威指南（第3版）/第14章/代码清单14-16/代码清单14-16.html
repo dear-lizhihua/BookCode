@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>在多个页面中通过共享后台线程来共享数据</title>
+<script type="text/javascript">
+var worker;
+function window_onload(){
+    worker = new SharedWorker('test.js');
+    var div = document.getElementById('div1');
+    worker.port.addEventListener('message', function(e) {
+       document.getElementById("text").value=e.data;
+    }, false);
+    worker.port.start();
+}
+function SendData(){
+    worker.port.postMessage(document.getElementById("text").value);
+}
+function getData(){
+    worker.port.postMessage('get');
+}
+</script>
+</head>
+<body onload="window_onload()">
+<h1>在多个页面中通过共享后台线程来共享数据</h1>
+<input type="text" id="text"></input>
+<button onclick="SendData()">提交数据</button>
+<button onclick="getData()">获取数据</button>
+</body>
+</html>

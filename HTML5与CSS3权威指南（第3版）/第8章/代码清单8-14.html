@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>创建索引</title>
+<script>	
+window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange|| window.webkitIDBKeyRange || window.msIDBKeyRange;
+window.IDBCursor = window.IDBCursor || window.webkitIDBCursor || window.msIDBCursor;		
+function CreateIndex(){
+    var dbName = 'indexedDBTest'; //数据库名
+    var dbVersion = 20150306; //版本号
+    var idb; 
+    /*连接数据库，dbConnect对象为一个IDBOpenDBRequest对象，代表数据库连接
+    的请求对象*/
+    var dbConnect = indexedDB.open(dbName, dbVersion); 
+    dbConnect.onsuccess = function(e){//连接成功
+        //e.target.result为一个IDBDatabase对象，代表连接成功的数据库对象
+        idb = e.target.result; 
+        alert('数据库连接成功');
+    };
+    dbConnect.onerror = function(){
+        alert('数据库连接失败');
+    };	
+    dbConnect.onupgradeneeded = function(e){
+        //数据库版本更新
+        //e.target.result为一个IDBDatabase对象，代表连接成功的数据库对象
+        idb = e.target.result; 
+        /*e.target.transaction属性值为一个IDBTransaction事务对象，此处代表
+        版本更新事务*/
+        var tx = e.target.transaction;
+        var name = 'newUsers';
+        var optionalParameters = {
+            keyPath: 'userId',
+            autoIncrement: false
+        };
+        var store = idb.createObjectStore(name,  optionalParameters);
+        alert('对象仓库创建成功');
+        var name =  'userNameIndex';
+        var keyPath = 'userName';
+        var optionalParameters = {
+            unique: false,
+            multiEntry: false 
+        };
+ 
+        var idx = store.createIndex(name, keyPath, optionalParameters);
+        alert('索引创建成功');
+    };
+}	
+</script>		
+</head>	
+<body>						
+<input type="button" value="创建索引" onclick="CreateIndex();"/>
+</body>
+</html>

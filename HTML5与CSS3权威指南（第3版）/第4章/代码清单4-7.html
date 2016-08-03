@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<head>
+<title>标签的control属性使用示例</title>
+<meta charset="UTF-8">
+</head>
+<script type="text/javascript">
+function setValue(){
+    var label=document.getElementById("label");
+    var textbox=label.control;
+    textbox.value="213001";
+}
+</script>
+<form>
+<label id="label">
+    邮编:
+    <input id="txt_zip" maxlength="6">
+    <small>请输入六位数字</small>
+</label>
+<input type="button" value="设置默认值"  onclick="setValue()"/>
+</form>

@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>btoa方法使用示例</title>
+</head>
+<script language=javascript>
+var result=document.getElementById("result");
+var file=document.getElementById("file");
+if (typeof FileReader == 'undefined' )
+{
+    result.innerHTML = "<p>抱歉，你的浏览器不支持 FileReader</p>";
+    file.setAttribute( 'disabled','disabled' );
+}
+function file_onchange(){
+    document.getElementById("btnReadPicture").disabled=false;
+}
+function readPicture()
+{
+    //检查是否为图像文件
+    var file = document.getElementById("file").files[0];
+    if(!/image\/\w+/.test(file.type))
+    {
+        alert("请确保文件为图像类型");
+        return false;
+    }   
+    var reader = new FileReader();
+    //将文件以二进制形式进行读入页面
+    reader.readAsBinaryString(file);
+    reader.onload = function(f)
+    {
+        var result=document.getElementById("result");
+        var src="data:"+file.type+";base64,"+window.btoa(this.result);
+        result.innerHTML = '<img src="'+src+'" alt=""/>'
+    }
+}
+</script>
+<p>
+    <label>请选择一个文件：</label>
+    <input type="file" id="file" onchange="file_onchange()"/>
+    <input type="button" id="btnReadPicture" value="读取图像" onclick="readPicture()" disabled="distabled"/>
+</p> 
+<div name="result" id="result">
+      <!-- 这里用来显示读取结果 -->
+</div>

@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>向indexedDB数据库的对象仓库中保存数据</title>
+<script>	
+window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange|| window.webkitIDBKeyRange || window.msIDBKeyRange;
+window.IDBCursor = window.IDBCursor || window.webkitIDBCursor || window.msIDBCursor;		
+function SaveData(){
+    var dbName = 'indexedDBTest'; //数据库名
+    var dbVersion = 20150306; //版本号
+    var idb; 
+    /*连接数据库，dbConnect对象为一个IDBOpenDBRequest对象，代表数据库连接
+    的请求对象*/
+    var dbConnect = indexedDB.open(dbName, dbVersion);
+    dbConnect.onsuccess = function(e){//连接成功   
+        idb = e.target.result; //引用IDBDatabase对象 
+        var tx = idb.transaction(['Users'],"readwrite"); //开启事务
+        var store = tx.objectStore('Users');
+        console.log(store); //-> {IDBObjectStore}
+        var value = {
+            userId: 1,
+            userName: '张三',
+            address: '住址1'
+        };
+        var req = store.put(value);
+        req.onsuccess = function(e){
+            alert("数据保存成功");
+        };
+        req.onerror = function(e){
+            alert("数据保存失败");
+        };
+    };
+    dbConnect.onerror = function(){
+        alert('数据库连接失败');
+    };
+}	
+</script>		
+</head>	
+<body>
+<input type="button" value="保存数据" onclick="SaveData();"/>
+</body>
+</html>

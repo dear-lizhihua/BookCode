@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>Promise对象使用示例</title>
+</head>
+<script language=javascript>
+function CreateXMLHTTP() {
+    if (window.ActiveXObject) {
+        var objXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } 
+    else {
+        if (window.XMLHttpRequest) {
+            var objXmlHttp = new XMLHttpRequest();
+        }
+        else {
+            alert("Can't intialize XMLHTTP object！");
+        }
+    }
+    return objXmlHttp;
+} 
+
+function read()
+{
+    var fileName="1.txt";
+    var promise=new Promise(function(resolve, reject) { 
+        var objXmlHttp=CreateXMLHTTP();           
+        objXmlHttp.open("GET",fileName, true); 
+        objXmlHttp.onreadystatechange = function() { 
+            if (objXmlHttp.readyState == 4) { 
+                if (objXmlHttp.status == 200) 
+                    resolve(objXmlHttp.responseText);
+                else
+                    reject();
+            }
+        }
+        objXmlHttp.send();
+    });
+    promise.then(function(response){
+        var result=document.getElementById("result");
+        result.innerHTML=response;
+    },
+    function(){
+        alert("读取文件失败");
+    });
+}
+</script>
+<input type="button" value="读取文件" onclick="read()"/>
+<div name="result" id="result" style="white-space:pre">
+      <!-- 这里用来显示读取结果 -->
+</div>  
+</body> 
+</html>

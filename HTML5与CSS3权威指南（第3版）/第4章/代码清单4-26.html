@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<meta charset=UTF-8/>
+<title>对话框使用示例</title>
+<style>
+::backdrop{
+    background-color:black;
+}
+</style>
+<input type="button" value="打开对话框" onclick="document.getElementById('dg').showModal();document.getElementById('dg').returnValue='对话框的值';">
+<dialog id="dg" style="width:90%;text-align:center;" onclose="alert('对话框被关闭')" oncancel="alert('用户在模式窗口中按下Esc键')">
+    <h1>用户登录</h1>
+    <main>
+        <form>
+            <label for="txtName" value="用户名："/><input type="text" id="txtName"/><br/>
+            <label for="txtPassword" value="密码："/><input type="password" id="txtPassword"  autofocus/><br/>
+            <input type="button" value="登录" /><input type="button" value="关闭"  onclick="document.getElementById('dg').close();alert(document.getElementById('dg').returnValue);"/>
+        </form>
+    </main>
+</dialog>

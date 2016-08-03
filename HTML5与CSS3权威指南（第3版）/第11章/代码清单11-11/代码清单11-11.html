@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>监听特定事件</title>
+<script type="text/javascript">
+if(typeof(EventSource)!=="undefined")
+{
+    var source=new EventSource("test.php");
+    source.addEventListener('requests', updateRequests, false);
+}
+else
+{
+    document.getElementById("result").innerHTML="对不起,您的浏览器不支持Server-Sent Events API!";
+}
+function updateRequests(event)
+{
+   document.getElementById("result").innerHTML+=event.data + "<br />";
+}
+</script>
+</head>
+<body>
+<h1>监听特定事件</h1>
+<div id="result"></div>
+</body>
+</html>
+

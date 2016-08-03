@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>3D缩放变形方法的使用示例</title>
+<style type="text/css">
+div{
+    width: 300px;
+    height:100px;
+    background-color: yellow;
+    text-align: center;
+    transform:rotateY(45deg);
+}
+</style>
+</head>
+<body>
+<div id="div">示例文字</div>
+<input type="button" value="X轴方向放大" onclick="scaleX()" />
+<input type="button" value="Y轴方向放大" onclick="scaleY()" />
+<input type="button" value="Z轴方向放大" onclick="scaleZ()" />
+<script>
+var n,scINT,scXINT,scYINT,scZINT;
+var div=document.getElementById("div");
+ 
+function scaleX()
+{
+    n=1;
+    clearInterval(scXINT);
+    scXINT=setInterval("startXScale()",10);
+}
+function startXScale()
+{
+    n=n+0.1;
+    div.style.transform="scaleX(" + n + ")";
+    if (n>=2)
+    {
+        clearInterval(scXINT);
+	n=0;
+    }
+}
+function scaleY()
+{
+    n=1;
+    clearInterval(scYINT);
+    scYINT=setInterval("startYScale()",10);
+}
+function startYScale()
+{
+    n=n+0.1;
+    div.style.transform="scaleY(" + n + ")";
+    if (n>=2)
+    {
+        clearInterval(scYINT);
+	n=0;
+    }
+}
+function scaleZ()
+{
+    n=0;
+    clearInterval(scZINT);
+    scZINT=setInterval("startZScale()",10);
+}
+function startZScale()
+{
+    n=n+0.1;
+    div.style.transform="scaleZ(" + n + ")";
+    if (n>=2)
+    {
+        clearInterval(scZINT);
+	n=0;
+    }
+}
+</script>
+</body>
+</html>

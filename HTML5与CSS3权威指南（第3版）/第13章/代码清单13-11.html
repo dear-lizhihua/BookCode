@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>	
+<head>		
+<title>发送ArrayBuffer对象</title>		
+<script>    
+function postArrayBuffer(){
+    var check=document.getElementsByName("check");
+    var tmpArray=new Array();
+    for(var i=0;i<check.length;i++)
+    {
+        if(check[i].checked)
+            tmpArray.push(i);            
+    }
+    var buffer = new ArrayBuffer(tmpArray.length);
+    var bytearray = new Int8Array(buffer);
+    for(var i=0;i<tmpArray.length;i++)
+    {
+        bytearray[i]=tmpArray[i];
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'putData.php', true);
+    xhr.send(buffer);
+}							    
+</script>
+</head>	
+<body>	
+<input type="button" onclick="postArrayBuffer()" value="提交"/><br/>	
+<input type="checkbox" name="check"/>数据1<br/>	
+<input type="checkbox" name="check"/>数据2<br/>
+<input type="checkbox" name="check"/>数据3<br/>
+<input type="checkbox" name="check"/>数据4<br/>
+<input type="checkbox" name="check"/>数据5<br/>
+<input type="checkbox" name="check"/>数据6<br/>
+<input type="checkbox" name="check"/>数据7<br/>
+<input type="checkbox" name="check"/>数据8<br/>
+<input type="checkbox" name="check"/>数据9<br/>
+<input type="checkbox" name="check"/>数据10
+</body>
+</html>
+

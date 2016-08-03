@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html> 
+<html>   
+<head>     
+<meta charset="utf-8">
+<title>创建及下载二进制文件</title>   
+<script>
+//创建及下载二进制文件
+function Blob_test(){
+    var text = document.getElementById("text").value;
+    var blob;
+    var result = document.getElementById("result");
+    //创建Blob对象
+    if(!window.Blob)
+        result.innerHTML="您的浏览器不支持使用Blbo对象。";
+    else
+        blob =new Blob([text]);//Blob中数据为文字时默认使用utf8格式。
+    //通过createObjectURL方法创建文字链接
+    if (window.URL) {
+        result.innerHTML = '<a download href="' +window.URL.createObjectURL(blob) + '" target="_blank">文件下载</a>';
+    }
+}
+</script>
+</head>  
+<body>     
+<textarea id="text" placeholder="请输入一些文字"></textarea><br />
+<button id="btndownload" onclick="Blob_test()">创建及下载二进制文件
+</button>  
+<output id="result"></output>  
+</body> 
+</html>

@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>链式调用Promise对象的then方法</title>
+</head>
+<script language=javascript>
+function CreateXMLHTTP() {
+    if (window.ActiveXObject) {
+        var objXmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } 
+    else {
+        if (window.XMLHttpRequest) {
+            var objXmlHttp = new XMLHttpRequest();
+        }
+        else {
+            alert("Can't intialize XMLHTTP object！");
+        }
+    }
+    return objXmlHttp;
+} 
+
+function read()
+{
+    var fileName="user.json";
+    var promise=new Promise(function(resolve, reject) { 
+        var objXmlHttp=CreateXMLHTTP();       
+        objXmlHttp.open("GET",fileName, true); 
+        objXmlHttp.onreadystatechange = function() { 
+            if (objXmlHttp.readyState == 4) { 
+                if (objXmlHttp.status == 200) {
+                    resolve(objXmlHttp.responseText);
+                }
+                else
+                    reject();
+            }
+        }
+        objXmlHttp.send();
+    });
+    promise.then(function(response){
+        return JSON.parse(response);
+    },
+    function(){
+        alert("读取失败");
+    }).then(function(obj){
+        document.getElementById("number").value=obj.number;
+        document.getElementById("name").value=obj.name;
+        document.getElementById("age").value=obj.age;
+        document.getElementById("phone").value=obj.phone;
+    });
+    /*promise.then(JSON.parse,
+    function(){
+        alert("读取失败");
+    }).then(function(obj){
+        document.getElementById("number").value=obj.number;
+        document.getElementById("name").value=obj.name;
+        document.getElementById("age").value=obj.age;
+        document.getElementById("phone").value=obj.phone;
+    });*/
+}
+</script>
+<form id="form1">
+    <input type="button" value="读取用户资料" onclick="read()"/><br/>
+    学号:<input type="text" id="number" /><br/>
+    姓名:<input type="text" id="name" /><br/>
+    年龄:<input type="number" id="age" />
+</form>  
+</body> 
+</html>

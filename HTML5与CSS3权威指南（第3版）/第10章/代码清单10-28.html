@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>atob方法使用示例</title>
+</head>
+<script language=javascript>
+var canvas;
+function draw(id)
+{  
+    canvas = document.getElementById(id);  
+    var context = canvas.getContext('2d'); 
+    context.fillStyle = "rgb(0, 0, 255)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "rgb(255, 255, 0)";
+    context.fillRect(10, 20, 50, 50); 
+}
+function imgSave(){
+    var data=canvas.toDataURL("image/jpeg");
+    data=data.replace("data:image/jpeg;base64,","");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "uploadImage.php");
+    xhr.sendAsBinary(window.atob(data));
+}
+</script>
+<body onload="draw('canvas')">
+<input type="button" value="上传图片" onclick="imgSave()"/><br/>
+<canvas id="canvas" width="400" height="300"></canvas>
+</body>

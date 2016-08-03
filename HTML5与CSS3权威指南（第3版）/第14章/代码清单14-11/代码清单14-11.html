@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>在单个页面中使用SharedWorker</title>
+<script type="text/javascript">
+function window_onload(){
+    var worker = new SharedWorker('test.js');
+    var div = document.getElementById('div1');
+    worker.port.onmessage = function(e) { 
+        div.innerHTML=e.data;
+    }
+}
+</script>
+</head>
+<body onload="window_onload()">
+<h1>在单个页面中使用SharedWorker</h1>
+<div id="div1"></div>
+</body>
+</html>

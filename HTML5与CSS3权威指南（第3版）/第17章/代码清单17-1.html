@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>Page Visibility API使用示例</title>
+<script>
+var hidden, visibilityChange,videoElement;   
+if (typeof document.hidden !== "undefined") {  
+    hidden = "hidden";  
+    visibilityChange = "visibilitychange";  
+} 
+else if (typeof document.mozHidden !== "undefined") {  
+    hidden = "mozHidden";  
+    visibilityChange = "mozvisibilitychange";  
+} 
+else if (typeof document.msHidden !== "undefined") {  
+    hidden = "msHidden";  
+    visibilityChange = "msvisibilitychange";  
+} 
+else if (typeof document.webkitHidden !== "undefined") {  
+    hidden = "webkitHidden";  
+    visibilityChange = "webkitvisibilitychange";  
+}  
+document.addEventListener(visibilityChange, handleVisibilityChange,
+false);  
+function window_onload(){
+    videoElement= document.getElementById("videoElement"); 
+    videoElement.addEventListener('ended',videoEnded,false);
+    videoElement.addEventListener('play',videoPlay,false);
+    videoElement.addEventListener('pause',videoPause,false);
+}
+//如果页面变为不可见状态，则暂停视频播放;  
+//如果页面变为可见状态，则继续视频播放; 
+function handleVisibilityChange() {  
+    if (document[hidden]) {  
+        videoElement.pause();  
+    } 
+    else {  
+        videoElement.play();  
+    }  
+} 
+function play() 
+{
+    
+    // 播放视频
+    videoElement.play();
+}
+function pause() 
+{
+    //暂停播放
+    videoElement.pause();
+}
+function PlayOrPause()
+{
+    if(videoElement.paused)
+    {
+       videoElement.play();   
+    }
+    else
+        videoElement.pause();
+
+} 
+function videoEnded(ev)
+{
+    videoElement.currentTime=0;
+    this.pause();
+}
+function videoPlay(ev)
+{
+    var btnPlay=document.getElementById("btnPlay");
+    btnPlay.innerHTML="暂停";
+}
+function videoPause(ev)
+{
+    var btnPlay=document.getElementById("btnPlay");
+    btnPlay.innerHTML="播放";
+}
+
+</script>
+</head>
+<body onload="window_onload()">
+    <video id="videoElement" src="BigBuck.webm" controls></video><br/>
+    <button id="btnPlay" onclick="PlayOrPause()">播放</button>
+</body>
+</html>

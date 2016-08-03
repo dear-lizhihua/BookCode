@@ -1,0 +1,347 @@
+﻿header article section footer nav aside{
+    display:block;
+}
+body{
+    font-weight: normal;
+    font-size: 12px;
+    color:#666666;
+    width:1024px;
+    margin:auto;
+}
+li{
+    font-weight: normal;
+    font-size: 12px;
+    color: #000000;
+    line-height: 20px;
+    font-family: 宋体;
+    text-decoration: none;
+    list-style:none;
+}
+a:link,
+a:active,
+a:visited
+a:hover {
+    font-size: 12px; 
+    color: #2A2B29; 
+    font-family: 宋体; 
+    text-decoration: none;
+}
+a:hover{
+    color: #B12C2C;
+}
+
+header#webTitle{
+    display: flex;
+    width:100%;
+    justify-content:center;
+    align-items: center;
+    flex-direction:column;
+}
+#divTop1{
+    margin-top:10px;
+    display: flex;
+    width:900px;
+}
+#TopLeft{
+    width:600px;
+}
+#imglogo1{
+    width:600px;
+    height:74px;
+}
+#TopMid{
+    width:100px;
+    background:url(images/logo_bg.jpg);
+}
+#TopRight{
+    width:200px;
+}
+#imglogo2{
+    width:200px;
+    height:74px;
+}
+
+header nav{
+    width:900px;
+}
+
+#TopLeft{
+    width:600px;
+}
+#TopMid{
+    width:95px;
+    background:url(images/logo_bg.jpg);
+}
+#TopRight{
+    width:188px;
+}
+#imglogo1{
+    width:600;
+    height:74;
+}
+#imglogo2{
+    width:188px;
+    height:74;
+    border:0px;
+}
+ul#topNavUrl{
+    width:900;
+    height:39;
+    margin: 0;
+    padding: 0;
+}
+ul#topNavUrl li{
+    display: inline-block;
+}
+ul#topNavUrl img{
+    margin: 0;
+    padding: 0;
+    height:39px;
+}
+ul#topNavUrl #img1{
+    width:16px;
+} 
+ul#topNavUrl img*=old:{
+    width:7px;
+}
+ul#topNavUrl img*=even:{
+    width:81px;
+}
+ul#topNavUrl img:nth-last-child{
+    width:179px;
+}
+#divTop2{
+    width:900px;
+}
+#divTop2 #Bottom1{
+    width:900px;
+    background:url(images/index_4.jpg);
+    height:3px;
+}
+#divTop2 #Bottom2{
+    width:900px;
+    background:url(images/index_6.jpg);
+    height:11px;
+}
+#divTop2 #FDiv{
+    width:900px;
+    height:200px;
+}
+aside{
+    margin-left:50px;
+    float:left;
+    width:180px;
+}
+aside nav{
+    width: 180px; 
+}
+aside nav ul{ 
+    list-style: none; 
+    margin-left:5px;
+    margin-top:0px;
+    margin-right:15px;
+} 
+aside nav ul li
+{
+    background: url("images/left_bg.gif");
+    margin-left:-45px;
+    padding-left:20px;
+    display: inline-block;
+    width:160px;
+}
+aside nav ul li a{ 
+    margin: 0px;
+    display: block;   
+    margin-right: 0px;   
+    font-size: 12px;   
+    line-height: 24px;   
+    text-align: left;   
+    text-decoration: none;   
+    color: #777; 
+} 
+aside [id^=img1]{
+    width:180px;
+    height:40px;
+}
+aside [id^=img2]{
+    width:180px;
+    height:20px;
+}
+aside div{
+    width:180px;
+    margin:-10px;
+}
+aside div #img1{
+    width:180px;
+    height:40px;
+}
+aside div ul{
+    height:22px!important:height:24px;
+    background:url(images/ll.gif);
+    padding-left:8px;  
+}
+aside div li{
+    list-style:none;
+}
+aside div [id^=img2]{
+    width:180px;
+    height:10px;
+}
+article#main{
+    float:left;
+    width:720px;
+}
+
+article#main header{
+    width:720px;
+    height:30px;
+    background:url(images/in_c1.gif);
+    margin-left:20px;
+    padding-left:10px;
+}
+article#main header h5{
+    margin:0px;
+    padding:0px;
+    font-size:12px;
+    font-weight:normal;
+}
+article#main section{
+    width:688px;
+}
+article#main section img[id*=section]{
+    width:688px; 
+    height:35px;
+}
+article#main section [id^=topdiv]{
+    margin:0px;
+    padding:0px;
+}
+article#main section [id^=topdiv] h1{
+    margin:0px;
+    padding:0px;
+}
+article#main section [id^=bottomdiv]{
+    display: flex;
+}
+section#section1 #div1{
+    width:474px;
+    padding-left:30px;	
+}
+section#section1 ul{
+    width:99%;
+    padding-left:2px;
+    margin:0px;
+}
+section#section1 ul li[id^=line]{
+    background:url(images/line.gif);
+    height:1px;
+    width:474px;
+    padding-left:0px;
+}
+section#section1 ul li ul{
+    display: flex;
+}
+section#section1 ul li ul li{
+    padding-left:2px;
+}
+section#section1 ul li[id$=\_1]{
+    width:16px;
+    height:16px;
+}
+section#section1 ul li[id$=\_2]{
+    width:345px;
+}
+section#section1 ul li[id$=\_1] img{
+    width:8px;
+    height:8px;
+}
+section#section1 ul li[id$=\_3]{
+    width:73px;
+}
+section#section1 ul [id^=line]{
+    background:url(images/line.gif);
+    height:1px;
+    width:474px;
+    padding-left:0px;
+}
+section#section1 #div2{
+    width:214px;
+    padding-left:10px;	
+    margin-top:0px;
+    padding-top:0px;
+}
+section#section1 div2 img{
+    width:180px;
+    height:124px;	
+}
+section#section2 #div3{
+    padding-left:30px;	
+}
+section#section2 #div3 div#bottomdiv ul{
+    width:100%;
+}
+section#section2 #div3 ul{
+    list-style:none;
+    display: flex;
+
+}
+section#section2 #div3 ul li#li6{
+    width:195px;
+}
+section#section2 #div3 ul li#li7{
+    padding-left:20px;
+    padding-right:20px;
+    width:493px;
+}
+section#section2 #div3 ul li p{
+    margin: 0px;
+    text-indent: 25px;
+}
+section#section2 #div3 ul li#li img{
+    height:122px; 
+    width:187px;
+}
+section#section3{
+    margin-bottom:20px;
+}
+section#section3 #bottomdiv3 ul
+{
+    display: flex;	
+    justify-content: center;
+}
+section#section3 #bottomdiv3 ul{
+    width:620px;
+    list-style:none;
+}
+section#section3 #bottomdiv3 ul li{
+    height:99px;
+}
+section#section3 #bottomdiv3 ul li ul{
+    display: flex;
+    flex-direction:column;	
+    width:100%;
+}
+section#section3 #bottomdiv3 ul li ul li{
+    align:center;
+}
+section#section3 #bottomdiv3 ul li ul li a img{
+    border:none;
+    width:130px;
+    height:99px;
+}
+footer{
+    width:900px;
+    left:50px;
+    display:block;
+    float:left;
+}
+footer #footertop{
+    width:900px;
+    background:url(images/index_8.jpg);
+}
+footer #footermain{
+    width:900px;
+    height:63px;
+    text-align:center;
+    color:black;
+}

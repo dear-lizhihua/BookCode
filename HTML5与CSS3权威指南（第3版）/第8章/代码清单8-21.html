@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>   
+<head>   
+<meta charset="UTF-8">  
+<title>使用indexedDB API制作Web留言本</title>  
+<script type="text/javascript">
+window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB ||  
+window.msIndexedDB;
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction ||  
+window.msIDBTransaction;
+window.IDBKeyRange = window.IDBKeyRange|| window.webkitIDBKeyRange || 
+window.msIDBKeyRange;
+window.IDBCursor = window.IDBCursor || window.webkitIDBCursor || window.msIDBCursor;	
+var dbName = 'MyData'; //数据库名
+var dbVersion = 20150311; //版本号
+var idb,datatable; 
+function init(){
+    var dbConnect = indexedDB.open(dbName, dbVersion); //连接数据库
+    dbConnect.onsuccess = function(e){//连接成功    
+        idb = e.target.result; //获取数据库
+        datatable = document.getElementById("datatable");  
+    };
+    dbConnect.onerror = function(){
+        alert('数据库连接失败');
+    };	
+    dbConnect.onupgradeneeded = function(e){
+        idb = e.target.result;
+        if(!idb.objectStoreNames.contains('MsgData'))
+        {
+            var tx = e.target.transaction;
+            tx.onabort = function(e){
+                alert('对象仓库创建失败');
+            };
+            var name = 'MsgData';
+            var optionalParameters = {
+                keyPath: 'id',
+                autoIncrement: true
+            };
+            var store = idb.createObjectStore(name,  optionalParameters);
+            alert('对象仓库创建成功');
+        }
+    };
+}
+function removeAllData()
+{  
+    for (var i =datatable.childNodes.length-1; i>=0; i--) 
+    {  
+        datatable.removeChild(datatable.childNodes[i]);  
+    }  
+    var tr = document.createElement('tr');  
+    var th1 = document.createElement('th');  
+    var th2 = document.createElement('th');  
+    var th3 = document.createElement('th');  
+    th1.innerHTML = '姓名';  
+    th2.innerHTML = '留言';  
+    th3.innerHTML = '时间';  
+    tr.appendChild(th1);  
+    tr.appendChild(th2);  
+    tr.appendChild(th3);  
+    datatable.appendChild(tr);  
+}
+function showData(dataObject) 
+{  
+    var tr = document.createElement('tr');  
+    var td1 = document.createElement('td');  
+    td1.innerHTML = dataObject.name;  
+    var td2 = document.createElement('td');  
+    td2.innerHTML = dataObject.memo;  
+    var td3 = document.createElement('td');  
+    var t = new Date();  
+    t.setTime(dataObject.time);  
+    td3.innerHTML=t.toLocaleDateString()+" "+t.toLocaleTimeString();  
+    tr.appendChild(td1);  
+    tr.appendChild(td2);  
+    tr.appendChild(td3);  
+    datatable.appendChild(tr);    
+} 
+function showAllData() {
+    removeAllData();
+    var tx = idb.transaction(['MsgData'],"readonly"); //开启事务
+    var store = tx.objectStore('MsgData');
+    var range = IDBKeyRange.lowerBound(1);
+    var direction = "next"; 
+    var req = store.openCursor(range, direction);
+    req.onsuccess = function(){
+        var cursor = this.result;
+        if(cursor){     
+            showData(cursor.value);       
+            cursor.continue(); //继续检索
+        }
+    }
+}
+function addData(name, message, time) 
+{  
+    var tx = idb.transaction(['MsgData'],"readwrite"); //开启事务
+    tx.oncomplete = function(){alert('保存数据成功');}
+    tx.onabort = function(){alert('保存数据失败'); }
+    var store = tx.objectStore('MsgData');
+    var value = {
+        name: name,
+        memo: message,
+        time: time
+    };
+    store.put(value);    
+}  
+function saveData()
+{  
+    var name = document.getElementById('name').value;  
+    var memo = document.getElementById('memo').value;  
+    var time = new Date().getTime();  
+    addData(name,memo,time);  
+    showAllData();  
+}
+</script>  
+</head>  
+<body onload="init();">  
+<h1>使用indexedDB API制作Web留言本</h1>  
+<table>  
+    <tr><td>姓名:</td><td><input type="text" id="name"></td></tr>  
+    <tr><td>留言:</td><td><input type="text" id="memo"></td></tr>  
+    <tr>
+<td></td>
+<td><input type="button" value="保存" onclick="saveData();"></td>
+</tr>  
+</table>  
+<hr>  
+<table id="datatable" border="1"></table>  
+<p id="msg"></p>  
+</body>  
+</html>

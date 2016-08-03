@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html> 
+<html>   
+<head>     
+<meta charset="utf-8">
+<title>使用FormData对象向服务器端上传文件</title>   
+<script>
+function uploadFile() {
+    var formData = new FormData();
+    var files=document.getElementById("file1").files;
+    for (var i = 0;i<files.length;i++) {
+        var file=files[i];
+        formData.append('myfile[]', file);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST','test.php', true);
+    xhr.onload = function(e) {         
+        if (this.status == 200) {
+            document.getElementById("result").innerHTML=this.response;
+        }
+    };
+    xhr.send(formData);  
+}
+</script>
+</head>  
+<body>     
+<h1>使用FormData对象向服务器端上传文件</h1>     
+<form id="form1" enctype="multipart/form-data">      
+请选择文件<input type="file" id="file1" name="file" multiple><br/>
+<input type="button" value="上传文件" onclick="uploadFile();">     
+</form>     
+<output id="result" ></output>     
+</body> 
+</html>
+

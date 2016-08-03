@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>在两个页面中共享后台线程</title>
+<script type="text/javascript">
+var worker;
+function window_onload(){
+    worker = new SharedWorker('test.js');
+    var div = document.getElementById('div1');
+    worker.port.addEventListener('message', function(e) {
+       div.innerHTML=e.data;
+    }, false);
+    worker.port.start();
+    worker.port.postMessage(1);
+}
+</script>
+</head>
+<body onload="window_onload()">
+<h1>在两个页面中共享后台线程</h1>
+<div id="div1"></div>
+</body>
+</html>
