@@ -1,0 +1,25 @@
+P151
+
+USE db_book;
+CREATE TABLE tbl_points (
+         id INT,
+        name VARCHAR(10),
+        point INT);
+GO
+BEGIN TRANSACTION;
+INSERT INTO tbl_points VALUES (23, 'omatsu', 500);
+INSERT INTO tbl_points VALUES (25, 'kadomatsu', 240);
+GO
+COMMIT;
+GO
+SELECT * FROM tbl_points;
+GO
+BEGIN TRANSACTION;
+INSERT INTO tbl_points VALUES (24, 'sawa', 450);
+INSERT INTO tbl_points VALUES (26, 'yama', 440);
+GO
+ROLLBACK;
+GO
+SELECT * FROM tbl_points;
+GO
+

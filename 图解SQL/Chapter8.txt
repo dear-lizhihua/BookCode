@@ -1,0 +1,142 @@
+P166
+BEGIN
+      SELECT GETDATE();
+      PRINT ' 你好，世界！ '
+END
+GO
+
+P169
+BEGIN
+    DECLARE @a VARCHAR(4), @b INT
+    SET @a = '文字'
+    SET @b = 5
+    PRINT @a
+    PRINT @b
+END
+GO
+
+P171
+BEGIN
+    DECLARE @myint INT, @mystr VARCHAR(20)
+    SET @myint = 0
+    SET @mystr = ' 文字'
+     IF (@myint = 0) 
+             BEGIN
+                 SET @mystr = @myint
+                 PRINT ' 值为' + @mystr + '。'
+             END
+     ELSE
+             PRINT ' 值不是' + @myint + '。'
+     WHILE (@myint <= 5) 
+     BEGIN
+              SET @myint = @myint + 1
+              PRINT @myint
+     END
+END
+GO
+
+P174
+USE db_book;
+CREATE TABLE tbl_mock (
+    stu_no INT PRIMARY KEY,
+    name VARCHAR(10),
+    score_chinese INT,
+    score_math INT);
+GO
+INSERT INTO tbl_mock VALUES (1, '相泽', 70, 95);
+INSERT INTO tbl_mock VALUES (2, '井上', 67, 59);
+INSERT INTO tbl_mock VALUES (3, '上原', 58, 63);
+INSERT INTO tbl_mock VALUES (4, '小川', 70, 47);
+INSERT INTO tbl_mock VALUES (5, '加藤', 50, 58);
+GO
+
+CREATE PROCEDURE sp_Testline @passmark INT AS
+BEGIN
+    DECLARE @chineseresult varchar(20)
+    DECLARE @mathresult varchar(20)
+    DECLARE @name varchar(10)
+    DECLARE @chinesescore INT
+    DECLARE @mathscore INT
+    DECLARE csr CURSOR FOR
+        SELECT name, score_chinese, score_math FROM tbl_mock
+            WHERE (score_chinese IS NOT NULL)
+            AND (score_math IS NOT NULL)
+    
+    OPEN csr
+    FETCH NEXT FROM csr INTO @name, @chinesescore, @mathscore
+    WHILE (@@FETCH_STATUS = 0)
+    BEGIN
+        IF @chinesescore >= @passmark
+            SELECT @chineseresult = '语文及格、'
+        ELSE
+            SELECT @chineseresult = '语文不及格、'
+        IF @mathscore >= @passmark
+            SELECT @mathresult = '数学及格。'
+        ELSE
+            SELECT @mathresult = '数学不及格。'
+		PRINT @name + '的' + @chineseresult + @mathresult
+		FETCH NEXT FROM csr INTO @name, @chinesescore, @mathscore
+    END
+    CLOSE csr
+    DEALLOCATE csr
+    RETURN
+END
+GO
+
+sp_Testline 60;
+GO
+
+P176
+' 从用户获取输入
+UserInput = InputBox(" 请输入SQL 语句", _
+       " 客户端查询软件", _
+       " ")
+' 连接RDBMS
+Set objSQLConnection = CreateObject("ADODB.Connection")
+objSQLConnection.Open _
+       "PROVIDER=SQLOLEDB;" & _
+       "SERVER=SQLEXPRESS1;" & _
+       "DATABASE=db_book;" & _
+       "UID=sa;" & _
+       "PWD=book"
+' 发送查询
+Set objSQLRecordset = CreateObject( "ADODB.Recordset" )
+objSQLRecordset.Open _
+       UserInput, _
+       objSQLConnection
+' 将查询结果调整为易于用户阅读的形式
+DatabaseTitle = ""
+DatabaseOut = ""
+Do Until objSQLRecordset.EOF
+        If DatabaseTitle = "" Then
+             For Each objField in objSQLRecordset.Fields
+                   DatabaseTitle = DatabaseTitle & objField.Name & "|"
+             Next
+                   DatabaseTitle = DatabaseTitle + vbNewLine
+       End If
+       For Each objField in objSQLRecordset.Fields
+             DatabaseOut = DatabaseOut & objField & "|"
+       Next
+       DatabaseOut = DatabaseOut & vbNewLine
+       objSQLRecordset.MoveNext
+Loop
+' 显示结果
+MsgBox DatabaseTitle & DatabaseOut, vbOKOnly, " 执行结果"
+
+P177
+USE db_book;
+CREATE TABLE tbl_bowling (
+        no INT PRIMARY KEY,
+        class VARCHAR(4),
+        sex VARCHAR(4),
+        name VARCHAR(10),
+        score1 INT,
+        score2 INT);
+GO
+INSERT INTO tbl_bowling VALUES (1, 'B', ' 女', ' 小川', 75, 96);
+INSERT INTO tbl_bowling VALUES (2, 'A', ' 女', ' 佐藤', 80, 77);
+INSERT INTO tbl_bowling VALUES (3, 'B', ' 男', ' 泽田', 120, 105);
+INSERT INTO tbl_bowling VALUES (4, 'A', ' 男', ' 山本', 150, 130);
+INSERT INTO tbl_bowling VALUES (5, 'B', ' 男', ' 木村', 89, 91);
+GO
+

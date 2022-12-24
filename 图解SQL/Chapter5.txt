@@ -1,0 +1,182 @@
+P100
+tbl_subjects
+
+USE db_book;
+CREATE TABLE tbl_subjects (
+              id INT PRIMARY KEY,
+             name VARCHAR(20),
+            math INT,
+            English INT);
+
+tbl_employee
+
+USE db_book;
+CREATE TABLE tbl_employee (
+             section VARCHAR(10),
+             name VARCHAR(10));
+INSERT INTO tbl_employee (section, name) VALUES (' 总务部',' 高尾');
+INSERT INTO tbl_employee (section, name) VALUES (' 人事部',' 宫坂');
+INSERT INTO tbl_employee (section, name) VALUES (' 财务部',' 船山');
+INSERT INTO tbl_employee (section, name) VALUES (' 人事部',' 村松');
+INSERT INTO tbl_employee (section, name) VALUES (' 社长室',' 石川');
+INSERT INTO tbl_employee (section, name) VALUES (' 财务部',' 西岛');
+INSERT INTO tbl_employee (section, name) VALUES (' 人事部',' 牟田');
+
+tbl_personnel
+
+USE db_book;
+CREATE TABLE tbl_personnel(
+             name VARCHAR(10));
+
+tbl_shopping
+
+USE db_book;
+CREATE TABLE tbl_shopping (
+             priority INT,
+             material VARCHAR(20),
+             num INT);
+INSERT INTO tbl_shopping VALUES (1,' 锯子',1);
+INSERT INTO tbl_shopping VALUES (2,' 钉子',30);
+INSERT INTO tbl_shopping VALUES (3,' 砂纸',5);
+INSERT INTO tbl_shopping VALUES (4,' 胶合板',1);
+
+tbl_title
+
+USE db_book;
+CREATE TABLE tbl_title (
+             code INT PRIMARY KEY,
+             title VARCHAR(40));
+INSERT INTO tbl_title VALUES (1111,' 诗织与书签');
+INSERT INTO tbl_title VALUES (2222,' 寻诗冒险记');
+INSERT INTO tbl_title VALUES (3333,' 捕捉SQL');
+
+P101
+tbl_novel
+
+USE db_book;
+CREATE TABLE tbl_novel (
+             code INT PRIMARY KEY,
+             title VARCHAR(40),
+             price INT);
+INSERT INTO tbl_novel VALUES (1111,' 诗织与书签', 580);
+INSERT INTO tbl_novel VALUES (2222,' 寻诗冒险记', 680);
+INSERT INTO tbl_novel VALUES (3333,' 捕捉SQL', 430);
+INSERT INTO tbl_novel VALUES (4444,' 爸爸的礼物', 980);
+
+tbl_results
+
+USE db_book;
+CREATE TABLE tbl_results (
+             id INT PRIMARY KEY,
+             team VARCHAR(1),
+             name VARCHAR(10),
+             point1 INT,
+             point2 INT);
+INSERT INTO tbl_results VALUES (1,'C', ' 泽田', 120, 105);
+INSERT INTO tbl_results VALUES (2,'A', ' 山本', 150, 130);
+INSERT INTO tbl_results VALUES (3,'B', ' 田代', 105, 98);
+INSERT INTO tbl_results VALUES (4,'A', ' 藤田', 170, 153);
+INSERT INTO tbl_results VALUES (5,'C', ' 佐藤', 147, 151);
+INSERT INTO tbl_results VALUES (6,'B', ' 长岛', 130, 125);
+
+tbl_advance
+
+USE db_book;
+CREATE TABLE tbl_advance (
+             no INT PRIMARY KEY,
+             team VARCHAR(1),
+             name VARCHAR(10),
+             point1 INT,
+             point2 INT);
+
+tbl_allowance
+
+USE db_book;
+CREATE TABLE tbl_allowance (
+             no INT PRIMARY KEY,
+             name VARCHAR(10),
+             overtime INT,
+             travel INT,
+             total INT);
+INSERT INTO tbl_allowance VALUES (1,' 高根泽', 35000, 18000, NULL);
+INSERT INTO tbl_allowance VALUES (2,' 藤本', 45000, 23600, NULL);
+INSERT INTO tbl_allowance VALUES (3,' 土谷', 56000, 32000, NULL);
+INSERT INTO tbl_allowance VALUES (4,' 小林', 21000, 14500, NULL);
+
+P102
+USE db_book;
+INSERT INTO tbl_subjects VALUES (1, ' 佐藤', 76, 98);
+INSERT INTO tbl_subjects VALUES (2, ' 山崎', 90, 74);
+SELECT * FROM tbl_subjects;
+GO
+
+P103
+USE db_book;
+INSERT INTO tbl_subjects (id, name, math) VALUES (3, ' 小林', 75);
+INSERT INTO tbl_subjects (id, name, English) VALUES (4, ' 西岛', 100);
+SELECT * FROM tbl_subjects;
+GO
+
+P105
+USE db_book;
+INSERT INTO tbl_personnel (name) SELECT name FROM tbl_employee
+           WHERE section = ' 人事部';
+SELECT * FROM tbl_personnel;
+GO
+
+P107
+USE db_book;
+UPDATE tbl_shopping SET material = ' 线锯', num = 2
+             WHERE priority = 1;
+UPDATE tbl_shopping SET num = 10 WHERE priority >= 3;
+SELECT * FROM tbl_shopping;
+GO
+
+P108
+USE db_book;
+DELETE FROM tbl_title WHERE code = 2222;
+SELECT * FROM tbl_title;
+GO
+
+P109
+USE db_book;
+DELETE FROM tbl_title;
+SELECT * FROM tbl_title;
+GO
+
+P111
+USE db_book;
+SELECT * FROM tbl_novel
+           WHERE price > (SELECT AVG(price) FROM tbl_novel);
+GO
+
+P112
+USE db_book;
+SELECT team, MIN(point2) AS lowest FROM tbl_results GROUP BY team
+         HAVING MAX(point2) >= (SELECT AVG(point1) FROM tbl_results);
+GO
+
+P113
+USE db_book;
+SELECT MAX(point_avg) AS max_avg
+            FROM (SELECT AVG(point1 + point2) AS point_avg
+                                    FROM tbl_results GROUP BY team) AS p_avg;
+GO
+
+P115
+USE db_book;
+INSERT INTO tbl_advance SELECT * FROM tbl_results
+            WHERE point1 + point2 > (SELECT AVG(point1 + point2) FROM
+            tbl_results);
+UPDATE tbl_allowance SET total = (overtime + travel)
+             WHERE overtime + travel < (SELECT MAX(overtime) FROM
+             tbl_allowance);
+DELETE FROM tbl_allowance WHERE travel > (SELECT AVG(travel)
+            FROM tbl_allowance WHERE overtime >= 40000);
+GO
+SELECT * FROM tbl_advance;
+SELECT * FROM tbl_allowance;
+GO
+
+
+

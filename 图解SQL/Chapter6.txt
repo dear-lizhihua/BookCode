@@ -1,0 +1,162 @@
+P120
+tbl_namelist
+
+USE db_book;
+CREATE TABLE tbl_namelist (
+             no INT,
+             name VARCHAR(10));
+INSERT INTO tbl_namelist VALUES (1, ' 山田');
+INSERT INTO tbl_namelist VALUES (2, ' 矢内');
+INSERT INTO tbl_namelist VALUES (3, ' 市桥');
+
+tbl_grades
+
+USE db_book;
+CREATE TABLE tbl_grades (
+             no INT,
+             history INT,
+             science INT);
+INSERT INTO tbl_grades VALUES (1,78,65);
+INSERT INTO tbl_grades VALUES (2,81,93);
+
+tbl_race
+
+USE db_book;
+CREATE TABLE tbl_race (
+             no INT,
+             team VARCHAR(20),
+             result INT);
+INSERT INTO tbl_race VALUES (92,'team9292', 1);
+INSERT INTO tbl_race VALUES (10,'nonstop', 3);
+INSERT INTO tbl_race VALUES (46,'v-rossi', 4);
+INSERT INTO tbl_race VALUES (74,'daichan', 5);
+INSERT INTO tbl_race VALUES (19,'senpai', 6);
+INSERT INTO tbl_race VALUES (11,'ukya', 7);
+
+P121
+tbl_club1
+
+USE db_book;
+CREATE TABLE tbl_club1 (
+             no INT,
+             fname VARCHAR(10),
+             sname VARCHAR(10));
+INSERT INTO tbl_club1 VALUES (1,'mayumi','tonegawa');
+INSERT INTO tbl_club1 VALUES (2,'yuko','satoh');
+INSERT INTO tbl_club1 VALUES (3,'nobuko','nemoto');
+
+tbl_club2
+
+USE db_book;
+CREATE TABLE tbl_club2 (
+             no INT,
+             fname VARCHAR(10),
+             sname VARCHAR(10));
+INSERT INTO tbl_club2 VALUES (1,'noriko','miyasaka');
+INSERT INTO tbl_club2 VALUES (2,'yuko','satoh');
+INSERT INTO tbl_club2 VALUES (3,'tamao','okada');
+
+tbl_dinner
+
+USE db_book;
+CREATE TABLE tbl_dinner (
+             no INT,
+             menu VARCHAR(40),
+             price INT);
+INSERT INTO tbl_dinner VALUES (1111, ' 日式汉堡排', 1300);
+INSERT INTO tbl_dinner VALUES (1112, ' 炸鸡块', 900);
+INSERT INTO tbl_dinner VALUES (1113, ' 姜汁烧肉', 1000);
+INSERT INTO tbl_dinner VALUES (1114, ' 香草烤鸡腿肉', 1350);
+INSERT INTO tbl_dinner VALUES (1115, ' 菲力牛排', 1800);
+INSERT INTO tbl_dinner VALUES (1116, ' 纳豆意面', 1550);
+
+tbl_lunch
+
+USE db_book;
+CREATE TABLE tbl_lunch (
+             no INT,
+             menu VARCHAR(40),
+             price INT);
+INSERT INTO tbl_lunch VALUES (2221, ' 炸鸡块套餐', 850);
+INSERT INTO tbl_lunch VALUES (2222, ' 咖喱饭', 900);
+INSERT INTO tbl_lunch VALUES (2223, ' 炸肉饼套餐',1000);
+INSERT INTO tbl_lunch VALUES (2224, ' 软糯乌冬面',1100);
+INSERT INTO tbl_lunch VALUES (2225, ' 蘑菇意面',1350);
+INSERT INTO tbl_lunch VALUES (2226, ' 鱼翅粥',1400);
+
+P125
+USE db_book;
+SELECT * FROM tbl_namelist CROSS JOIN tbl_grades;
+GO
+
+P127
+USE db_book;
+SELECT * FROM tbl_namelist INNER JOIN tbl_grades
+            ON tbl_namelist.no = tbl_grades.no;
+GO
+
+P129
+USE db_book;
+SELECT * FROM tbl_namelist LEFT JOIN tbl_grades
+            ON tbl_namelist.no = tbl_grades.no;
+GO
+
+P130
+USE db_book;
+INSERT INTO tbl_grades VALUES (4, 85, 100);
+SELECT * FROM tbl_namelist RIGHT JOIN tbl_grades
+           ON tbl_namelist.no = tbl_grades.no;
+GO
+
+P131
+USE db_book;
+SELECT * FROM tbl_namelist FULL JOIN tbl_grades
+           ON tbl_namelist.no = tbl_grades.no;
+GO
+
+P135-1
+USE db_book;
+
+CREATE VIEW viw_winner AS SELECT * FROM tbl_race WHERE result <= 3;
+GO
+
+SELECT * FROM viw_winner; 
+GO
+
+INSERT INTO viw_winner VALUES (23, 'team2323', 2);
+UPDATE viw_winner SET team = 'team5884' WHERE no = 92;
+DELETE FROM viw_winner WHERE no = 10;
+SELECT * FROM viw_winner; 
+GO
+
+P135-2
+USE db_book;
+DROP VIEW viw_winner;
+SELECT * FROM viw_winner;
+GO
+
+P137
+USE db_book;
+SELECT * FROM tbl_club1 WHERE no < 3 UNION SELECT * FROM tbl_club2
+           WHERE no < 3 ORDER BY no DESC;
+GO
+
+P140
+SELECT * FROM tbl_dinner
+     WHERE price < ALL (SELECT price FROM tbl_lunch
+      WHERE menu LIKE '%肉饼%');
+GO
+
+P141
+SELECT * FROM tbl_lunch 
+           WHERE EXISTS (SELECT * FROM tbl_dinner WHERE price > 1500);
+SELECT * FROM tbl_lunch 
+           WHERE NOT EXISTS (SELECT * FROM tbl_dinner WHERE price > 1500);
+GO
+
+P143
+SELECT menu FROM tbl_dinner WHERE price < ANY
+            (SELECT price FROM tbl_lunch WHERE no <= 2224);
+GO
+
+

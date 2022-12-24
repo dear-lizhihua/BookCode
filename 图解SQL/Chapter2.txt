@@ -1,0 +1,81 @@
+P31
+CREATE DATABASE db_book;
+GO
+
+USE db_book;
+CREATE TABLE tbl_book(
+             code INT,
+             title VARCHAR(30),
+             price INT);
+GO
+
+SELECT * FROM tbl_book;
+GO
+
+P33
+USE db_book;
+CREATE TABLE tbl_height(
+             id INT PRIMARY KEY,
+             name VARCHAR(20),
+             height FLOAT);
+GO
+
+P37
+USE db_book;
+INSERT INTO tbl_height (id, name, height) VALUES (1,'相泽', 149.5);
+INSERT INTO tbl_height (id, name, height) VALUES (2,'山本', 172);
+INSERT INTO tbl_height (id, name, height) VALUES (3,'泽口', 168);
+INSERT INTO tbl_height (id, name, height) VALUES (4,'小林', 149.5);
+SELECT * FROM tbl_height;
+GO
+
+P38
+USE db_book;
+SELECT name FROM tbl_height;
+GO
+
+P39
+USE db_book;
+SELECT id, height FROM tbl_height;
+GO
+
+P40
+USE db_book;
+CREATE TABLE tbl_exam (
+                 id INT PRIMARY KEY,
+                 name VARCHAR(20),
+                 score1 INT,
+                 score2 INT);
+GO
+INSERT INTO tbl_exam (id, name, score1, score2) VALUES (1, ' 相泽', 100, 98);
+INSERT INTO tbl_exam (id, name, score1, score2) VALUES (2, ' 山本', 75, 80);
+INSERT INTO tbl_exam (id, name, score1, score2) VALUES (3, ' 泽口', 70, 93);
+INSERT INTO tbl_exam (id, name, score1, score2) VALUES (4, ' 小林', 54, 65);
+GO
+SELECT name FROM tbl_exam WHERE id = 3;
+GO
+
+P41
+USE db_book;
+SELECT * FROM tbl_exam
+       WHERE score1 = 100;
+SELECT * FROM tbl_exam
+       WHERE score2 >= 80 ORDER BY score2 DESC;
+GO
+
+P45
+USE db_book;
+SELECT * FROM tbl_height ORDER BY height DESC, id DESC; 
+SELECT * FROM tbl_height ORDER BY height DESC, id ASC; 
+GO
+
+P47
+USE db_book;
+SELECT DISTINCT height AS stature FROM tbl_height;
+GO
+
+
+
+
+
+

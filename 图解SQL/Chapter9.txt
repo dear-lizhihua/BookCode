@@ -1,0 +1,73 @@
+P183
+USE db_book;
+CREATE TABLE tbl_noodles (
+        no INT NOT NULL,
+        name VARCHAR(40),
+        taste VARCHAR(5));
+GO
+INSERT INTO tbl_noodles VALUES (1,'札幌拉面','味噌');
+INSERT INTO tbl_noodles VALUES (2,'长滨拉面','豚骨');
+INSERT INTO tbl_noodles VALUES (3,'高山拉面','酱油');
+GO
+ALTER TABLE tbl_noodles ADD price INT; 
+ALTER TABLE tbl_noodles DROP COLUMN taste;
+SELECT * FROM tbl_noodles;
+GO
+ALTER TABLE tbl_noodles ADD stocks INT DEFAULT 50; 
+GO
+INSERT INTO tbl_noodles VALUES (4, '冈山拉面', 500, DEFAULT);
+SELECT * FROM tbl_noodles;
+GO
+
+P185
+USE db_book;
+CREATE TABLE tbl_noodles2 (
+        no INT NOT NULL,
+        name VARCHAR(20),
+        taste VARCHAR(5));
+GO
+INSERT INTO tbl_noodles2 VALUES (3,' 高山拉面', ' 酱油');
+ALTER TABLE tbl_noodles2 ADD PRIMARY KEY(no);
+INSERT INTO tbl_noodles2 (no) VALUES (3);
+GO
+
+P186
+USE db_book;
+CREATE TABLE tbl_noodles3 (
+        no INT NOT NULL,
+        name VARCHAR(20),
+        taste VARCHAR(5));
+GO
+EXEC sp_rename 'tbl_noodles3', 'tbl_pasta';
+GO
+
+P187
+USE db_book;
+CREATE TABLE tbl_noodles4 (
+        no INT NOT NULL,
+        name VARCHAR(20),
+        taste VARCHAR(5));
+GO
+EXEC sp_rename 'tbl_noodles4.[no]', 'noodle_no', 'COLUMN';
+GO
+
+P193
+USE db_book;
+CREATE TABLE tbl_snack (
+             no INT PRIMARY KEY,
+             name VARCHAR(20));
+GO
+INSERT INTO tbl_snack VALUES (1,' 薯片');
+INSERT INTO tbl_snack VALUES (2,' 仙贝');
+INSERT INTO tbl_snack VALUES (3,' 曲奇');
+GO
+CREATE TABLE tbl_sales (
+             id INT,
+             stock INT,
+             date DATETIME,
+             FOREIGN KEY (id) REFERENCES tbl_snack(no));
+GO
+INSERT INTO tbl_sales VALUES (2, 300, '2018-05-13');
+INSERT INTO tbl_sales VALUES (4, 150, '2018-05-26');
+GO
+

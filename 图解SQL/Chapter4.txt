@@ -1,0 +1,156 @@
+P74
+tbl_snum
+
+USE db_book;
+CREATE TABLE tbl_snum (
+             num FLOAT);
+INSERT INTO tbl_snum (num) VALUES (1.248);
+INSERT INTO tbl_snum (num) VALUES (29.5);
+INSERT INTO tbl_snum (num) VALUES (105.05);
+
+tbl_stdname
+
+USE db_book;
+CREATE TABLE tbl_stdname (
+             sname VARCHAR(20),
+             fname VARCHAR(20));
+INSERT INTO tbl_stdname (sname,fname) VALUES ('AIZAWA', 'namiko');
+INSERT INTO tbl_stdname (sname,fname) VALUES ('YAMAMOTO', 'tatsuki');
+INSERT INTO tbl_stdname (sname,fname) VALUES ('SAWAGUCHI', 'aki');
+INSERT INTO tbl_stdname (sname,fname) VALUES ('KOBAYASHI', 'maiko');
+
+tbl_pet
+
+USE db_book;
+CREATE TABLE tbl_pet (
+             pname VARCHAR(20));
+INSERT INTO tbl_pet (pname) VALUES (' CHIBI ');
+INSERT INTO tbl_pet (pname) VALUES (' ALEX ');
+INSERT INTO tbl_pet (pname) VALUES (' RAN ');
+INSERT INTO tbl_pet (pname) VALUES (' SHAM ');
+
+P75
+tbl_datelist
+
+USE db_book;
+CREATE TABLE tbl_datelist (
+             no INT,
+             date1 DATETIME,
+             date2 DATETIME);
+INSERT INTO tbl_datelist (no, date1, date2)
+           VALUES (1,'2018-04-13','2018-07-03');
+INSERT INTO tbl_datelist (no, date1, date2)
+           VALUES (2,'2018-10-11','2019-01-24');
+
+tbl_game
+
+USE db_book;
+CREATE TABLE tbl_game (
+             name VARCHAR(20),
+             score INT);
+INSERT INTO tbl_game (name, score) VALUES ('koba', 125);
+INSERT INTO tbl_game (name, score) VALUES ('tone', 140);
+INSERT INTO tbl_game (name, score) VALUES ('takane', 110);
+INSERT INTO tbl_game (name, score) VALUES ('koba', 75);
+INSERT INTO tbl_game (name, score) VALUES ('takane', 160);
+INSERT INTO tbl_game (name, score) VALUES ('tone', 98);
+INSERT INTO tbl_game (name, score) VALUES ('takane', 90);
+INSERT INTO tbl_game (name, score) VALUES ('koba', 64);
+INSERT INTO tbl_game (name, score) VALUES ('tone', 105);
+
+tbl_schedule
+
+USE db_book;
+CREATE TABLE tbl_schedule (
+             time VARCHAR(30));
+INSERT INTO tbl_schedule(time) VALUES ('12 29 2016 8:50AM');
+INSERT INTO tbl_schedule(time) VALUES ('02 06 2017 12:46AM');
+INSERT INTO tbl_schedule(time) VALUES ('06 30 2018 1:29PM');
+
+P79
+USE db_book;
+SELECT num, CEILING(num) AS result1,
+            FLOOR(num) AS result2 FROM tbl_snum;
+GO
+
+P80
+SELECT RAND(); 
+SELECT RAND(); 
+SELECT RAND(7); 
+SELECT RAND(7); 
+GO
+
+P82
+USE db_book;
+SELECT LEN(' 樱花　绽放'); 
+SELECT sname, LEN(sname) AS result FROM tbl_stdname; 
+GO
+
+P83
+USE db_book;
+SELECT fname, SUBSTRING(fname, 2, 2) AS result FROM tbl_stdname;
+GO
+
+P84
+USE db_book;
+SELECT '***' + pname + '***' AS pname,
+            '***' + LTRIM(pname) + '***' AS leftside,
+            '***' + RTRIM(pname) + '***' AS rightside
+            FROM tbl_pet;
+GO
+
+P85
+USE db_book;
+SELECT sname, LOWER(sname) AS small FROM tbl_stdname; 
+SELECT fname, UPPER(fname) AS capital FROM tbl_stdname; 
+GO
+
+P86
+SELECT GETDATE();
+GO
+
+P87
+USE db_book;
+CREATE TABLE tbl_date (currenttime DATETIME);
+GO
+INSERT INTO tbl_date (currenttime) VALUES (GETDATE());
+SELECT * FROM tbl_date; 
+SELECT DAY(currenttime) FROM tbl_date; 
+GO
+
+P89
+USE db_book;
+SELECT DATEADD(m, 6, date1) FROM tbl_datelist WHERE no = 1; 
+SELECT DATEDIFF(d, date1, date2) FROM tbl_datelist WHERE no = 2; 
+SELECT DATEDIFF(d, GETDATE(), '2019-01-01'); 
+GO
+
+P91-1
+USE db_book;
+SELECT AVG(score) AS average, SUM(score) AS total_score,
+            COUNT(name) AS game FROM tbl_game;
+GO
+
+P91-2
+USE db_book;
+SELECT COUNT(DISTINCT name) AS member FROM tbl_game;
+GO
+
+P92
+USE db_book;
+SELECT name, MAX(score) AS high, MIN(score) AS low
+       FROM tbl_game GROUP BY name;
+GO
+
+P93
+USE db_book;
+SELECT name, SUM(score) AS over300 FROM tbl_game
+         GROUP BY name HAVING (SUM(score) >= 300);
+GO
+
+P95
+USE db_book;
+SELECT time AS strings, CAST(time AS DATETIME) AS datetimes
+            FROM tbl_schedule;
+GO
+
